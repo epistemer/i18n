@@ -1,9 +1,118 @@
 # Roadmap
 
-The v1 milestones will be written together with the design. For now this file
-holds what v1 deliberately leaves out: ideas that came up while studying zp's
-i18n (master, 2026-11-12), parked for later. Each entry says why the idea came
-up, what it might look like, and what's still open.
+The order of work up to v0.1.0, then the ideas parked for after v1. The
+contract is the locked [interface](interface.md); how it's built is in
+[implementation.md](implementation.md). Progress is logged in
+[status.md](status.md).
+
+## v0.1.0
+
+Each item lands as a PR with green CI and a review by the other model family.
+A milestone is done when every item meets its done-when.
+
+### M0. Foundations
+
+- [ ] **M0.1** Module `github.com/epistemer/i18n` (Go 1.26), package docs, the
+  layout of implementation §1 with empty packages.
+  *Done when:* `go build ./...` and `go vet ./...` pass.
+- [ ] **M0.2** CI like cfgx's: gofmt, vet, staticcheck, `go test -race` on
+  Linux, macOS and Windows with Go 1.26 and 1.27, and a check that generated
+  code is current.
+  *Done when:* CI runs green on a PR.
+- [ ] **M0.3** ADR 0001: protobuf generation (`protoc` plus a pinned
+  `protoc-gen-go` tool), `records.proto` and its generated code.
+  *Done when:* `go generate ./...` reproduces the committed code.
+
+### M1. The read path
+
+- [ ] **M1.1** `format.go`: signatures and fit, with `FuzzFit` (implementation §5).
+  *Done when:* table tests cover every rule in interface §5.2, including
+  reused arguments and all three index slots, and the fuzzer runs 10 minutes
+  clean.
+- [ ] **M1.2** `locale.go`: `Locale`, canonical codes, base language,
+  Accept-Language parsing (implementation §8).
+  *Done when:* table tests cover case, scripts, regions, singletons, invalid
+  codes, whitespace, `q=0` and `*` in headers.
+- [ ] **M1.3** `ter.go`: `Ter`, `Ker`, `TKer`, `Tfunc`, the `Static*`
+  adapters, `NoneString`.
+  *Done when:* each adapter has a test, including nil pointers.
+- [ ] **M1.4** `registry.go`, `key.go`: `Key`, freezing, registry problems,
+  `Dynamic`, `DynamicWrap` (implementation §3).
+  *Done when:* child-process tests show that `Key` after `Load` panics with the
+  key's name, conflicting duplicates fail `Load` all at once, and identical
+  duplicates pass.
+- [ ] **M1.5** `store.go`, `translator.go`: layout, records, version check,
+  `New`, options, `Load` (implementation §2, §6).
+  *Done when:* tests show `Load` writes nothing on an unchanged store, marks
+  and unmarks orphans, refuses a newer version, and stores the source record
+  only once. Overrides are written straight into the buckets, since `Set`
+  comes in M2.
+- [ ] **M1.6** `resolve.go`: `resolveTx`, the resolution order, failure
+  behaviour and context helpers (implementation §4).
+  *Done when:* table tests cover every step of interface §5.1 using
+  hand-written buckets; `-race` passes with concurrent `T` and `Load`; the
+  benchmark is within the §4 budget.
+
+### M2. Locales and editing
+
+- [ ] **M2.1** Locale management: `Locales`, `Locale`, `CreateLocale`,
+  `UpdateLocale`, `DeleteLocale`, `Source`, `Default`, `Match`.
+  *Done when:* tests cover canonical codes on every entry point, the source
+  locale's protections, and deleting the configured default.
+- [ ] **M2.2** `Set` and `Reset`, with base records and the fit check.
+  *Done when:* the four zp regression tests pass (implementation §10),
+  `-race` passes with concurrent `T`, `Set` and `Reset`, and a misfit `Set` is
+  rejected with `ErrFormat`.
+- [ ] **M2.3** `Search`, `Orphans`, `Prune`, and `Entry.Misfit`.
+  *Done when:* the orphan lifecycle test passes; a route-style `Prefix` plus
+  `Match` query returns only matching keys; `Search` over 1,850 keys is
+  benchmarked.
+
+### M3. HTTP
+
+- [ ] **M3.1** `Middleware` with `IgnoreAcceptLanguage`, `Vary`, and one read
+  transaction per request.
+  *Done when:* `httptest` cases cover cookie, header, default and the
+  ignore option, and `Vary` is set exactly when implementation §9 says.
+- [ ] **M3.2** `Cookie`, `SetCookie`, `ClearCookie`.
+  *Done when:* tests check every cookie attribute, and that an unknown locale
+  returns `ErrUnknownLocale`.
+
+### M4. Integration
+
+- [ ] **M4.1** `i18nschema`: the fragment, with a test that generates a cfgx
+  app from it and checks the getter name.
+  *Done when:* the generated app's settings type satisfies `i18n.Config`.
+- [ ] **M4.2** `i18ntest`: `New` and `Context`.
+  *Done when:* the e2e test and at least one package test use it.
+- [ ] **M4.3** `examples/basic`: a net/http app on cfgx, plus the e2e test
+  (implementation §10).
+  *Done when:* the e2e test passes in CI on all three operating systems.
+
+### M5. Release
+
+- [ ] **M5.1** Godoc examples, and a README with a quickstart run step by step.
+  *Done when:* the examples run as tests, and the quickstart's output is pasted
+  from a real run.
+- [ ] **M5.2** API review of every exported identifier against the interface.
+  *Done when:* a written review lists each identifier and how it was checked,
+  and its findings are fixed or filed.
+- [ ] **M5.3** CHANGELOG and the `v0.1.0` tag.
+  *Done when:* `go get github.com/epistemer/i18n@v0.1.0` works through the
+  module proxy.
+
+### Working with agents
+
+Claude owns the cross-cutting core: M1.4–M1.6, M2.2, M2.3, M3.1, and the
+reviews of Gemini's work. Gemini, through agy, takes leaf items with a crisp
+done-when: M0.2, M0.3, M1.1–M1.3, M2.1, M3.2, M4.1–M4.3, M5.1. Each delegated
+item runs in its own git worktree outside the repository, for example
+`../i18n-worktrees/`.
+
+Model choice follows the global rules: Argon (High) for the pre-merge review
+of each milestone, Argon (Medium) or Flash (High) for well-specified code,
+Flash (Medium) for mechanical work. When a model is cooling down, the strongest
+available one runs instead, and the status log says which.
 
 ## Later
 

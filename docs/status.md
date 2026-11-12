@@ -4,6 +4,23 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
+## 2026-11-12: interface locked, implementation plan, milestones
+
+- **Landed:** the interface is locked, with your decisions and the proposed
+  answers to its open questions. [implementation.md](implementation.md) covers
+  the bucket layout, the resolution path, the fit check, `Load`, the editor
+  operations, locale codes, HTTP and the test plan. The
+  [roadmap](roadmap.md) has milestones M0–M5 up to v0.1.0, each item with a
+  done-when, and a split between Claude and Gemini. The repository is pushed
+  to [github.com/epistemer/i18n](https://github.com/epistemer/i18n).
+- **Reviewed:** [review 0002](reviews/0002-gemini-plan-review.md), Gemini
+  3.8 Flash (High), about 147k tokens, because Argon is still out of quota.
+  All 16 findings accepted (two as clarifications), none touching the
+  interface. The most serious: `Reset` would have returned stale text, and
+  `DynamicWrap` would have panicked on unregistered keys.
+- **Next:** M0. The module, CI, and ADR 0001 on protobuf generation.
+- **Waiting on you:** nothing.
+
 ## 2026-11-12: study of zp's i18n, draft interface, ownership
 
 - **Landed:** the first commit of the repository: [interface.md](interface.md)
