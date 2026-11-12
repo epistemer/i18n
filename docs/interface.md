@@ -1,8 +1,9 @@
-# i18n — Developer Interface (v1, draft)
+# i18n — Developer Interface (v1, locked)
 
-> Status: **draft, 2026-11-12. Not locked.** This document covers only what a
-> developer writes and what they get back. How it's built (bucket layout,
-> record formats) will go in implementation.md. Ideas left out of v1 are in
+> Status: **locked on 2026-11-12.** Any change needs an explicit amendment,
+> recorded in §13. This document covers only what a developer writes and what
+> they get back. How it's built (bucket layout, record formats) is in
+> [implementation.md](implementation.md). Ideas left out of v1 are in
 > [roadmap.md](roadmap.md).
 
 ## 0. Decisions so far
@@ -498,10 +499,10 @@ Both use the process's registry, so a component test sees the app's real keys.
 
 ---
 
-## 12. Open questions
+## 12. Former open questions (resolved 2026-11-12)
 
-| # | Question | Proposed |
-|---|----------|----------|
+| # | Question | Resolution |
+|---|----------|------------|
 | 1 | Should the source locale's record (native name, flag) follow the code, or the store once created? | The store, like every other edit (§4.1) |
 | 2 | May `Set` store an empty override, for example to hide a line in one deployment? | Yes: `""` is a value, stays empty even with `args` (§5.2), and `Reset` removes it |
 | 3 | Should the default locale be Mutable in `i18nschema`? | Yes, so white-labeling can change it at runtime |
@@ -510,12 +511,10 @@ Both use the process's registry, so a component test sees the app's real keys.
 
 ## 13. Amendments
 
-The draft isn't locked, so changes are made in place. This table records the
-larger ones.
-
 | Date | Change |
 |------|--------|
-| 2026-11-12 | From [review 0001](reviews/0001-gemini-design-review.md): base-language step in §5.1; overrides that no longer fit are skipped, and fit allows indexed omission (§5.2, §8.2, §9); empty text stays empty; canonical locale codes (§6.1); `Match` (§6.2); `Cookie` and `ClearCookie` (§7); D1 names the catalog; single-transaction `Search`; failure behavior of `T`; `Dynamic` keys must be registered |
+| 2026-11-12 | From [review 0001](reviews/0001-gemini-design-review.md): base-language step in §5.1; overrides that no longer fit are skipped, and fit allows indexed omission (§5.2, §8.2, §9); empty text stays empty; canonical locale codes (§6.1); `Match` (§6.2); `Cookie` and `ClearCookie` (§7); D1 names the catalog; single-transaction `Search`; failure behavior of `T`; `Dynamic` keys must be registered. Made in place, before the lock |
+| 2026-11-12 | Locked by epistemer, with D1's override-only store and the proposed answers to §12 |
 
 ---
 
