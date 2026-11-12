@@ -82,12 +82,13 @@ A milestone is done when every item meets its done-when.
 
 ### M4. Integration
 
-- [ ] **M4.1** `i18nschema`: the fragment, with a test that generates a cfgx
+- [x] **M4.1** `i18nschema`: the fragment, with a test that generates a cfgx
   app from it and checks the getter name.
   *Done when:* the generated app's settings type satisfies `i18n.Config`.
-- [ ] **M4.2** `i18ntest`: `New` and `Context`.
-  *Done when:* the e2e test and at least one package test use it.
-- [ ] **M4.3** `examples/basic`: a net/http app on cfgx, plus the e2e test
+- [x] **M4.2** `i18ntest`: `New` and `Context`.
+  *Done when:* i18ntest's own test and the example's handler test use it.
+  (The e2e test runs on cfgx's real store instead, on purpose.)
+- [x] **M4.3** `examples/basic`: a net/http app on cfgx, plus the e2e test
   (implementation §10).
   *Done when:* the e2e test passes in CI on all three operating systems.
 

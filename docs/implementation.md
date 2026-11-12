@@ -18,9 +18,9 @@ i18n/                    package i18n
   editor.go              Set, Reset, Search, Orphans, Prune, locale management
   http.go                Middleware, Cookie, SetCookie, ClearCookie
   internal/storepb/      records.proto and its generated Go code
-i18nschema/              the cfgx schema fragment
+i18nschema/              the cfgx schema fragment (its own module, ADR 0002)
 i18ntest/                New and Context for tests
-examples/basic/          a net/http app wired with cfgx, run by the e2e tests
+examples/basic/          a net/http app wired with cfgx, run by the e2e tests (its own module)
 ```
 
 Dependencies: `go.etcd.io/bbolt` (v1.5.0, as cfgx), `google.golang.org/protobuf`.

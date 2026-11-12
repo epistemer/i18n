@@ -49,11 +49,18 @@ jobs:
 
       - name: Run staticcheck
         if: matrix.os == 'ubuntu-latest' && matrix.go == '1.27.x'
-        run: go run honnef.co/go/tools/cmd/staticcheck@v0.8.2 ./...
+        run: |
+          for m in . i18nschema examples/basic; do
+            (cd "$m" && go run honnef.co/go/tools/cmd/staticcheck@v0.8.2 ./...)
+          done
 
-      - name: Check go.mod is tidy
+      # ADR 0002: the core, i18nschema and the example are separate modules.
+      - name: Check every go.mod is tidy
         if: matrix.os == 'ubuntu-latest' && matrix.go == '1.26.x'
-        run: go mod tidy -diff
+        run: |
+          for m in . i18nschema examples/basic; do
+            (cd "$m" && go mod tidy -diff)
+          done
 
       # ADR 0001: regenerate and compare, ignoring only protoc's version line,
       # and fail on generated files that were never committed.
@@ -74,3 +81,12 @@ jobs:
 
       - name: Run tests with race detector
         run: go test -race ./...
+
+      # The example's tests include cfgxtest.AssertGenerated, which fails on
+      # stale generated settings, and the end-to-end test over HTTP.
+      - name: Test nested modules
+        run: |
+          for m in i18nschema examples/basic; do
+            echo "== $m"
+            (cd "$m" && go vet ./... && go test -race ./...)
+          done
