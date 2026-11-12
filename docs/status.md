@@ -4,6 +4,53 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
+## 2026-11-12: M2–M5, v0.1.0 released
+
+- **Landed:**
+  - **M2** ([PR #3](https://github.com/epistemer/i18n/pull/3)): locale
+    management, `Set`, `Reset`, `Search`, orphans. The four zp regression
+    tests pass. `Search` over 1,850 keys takes about 3.6 ms.
+  - **M3** ([PR #4](https://github.com/epistemer/i18n/pull/4)): the
+    middleware (one read per request, `Vary` whenever the header takes part)
+    and the cookie helpers.
+  - **M4** ([PR #5](https://github.com/epistemer/i18n/pull/5)): `i18nschema`
+    as its own module ([ADR 0002](adr/0002-nested-modules.md)), `i18ntest`,
+    and `examples/basic`. The example's end-to-end test changes the default
+    locale at runtime through cfgx's store.
+  - **M5** ([PR #6](https://github.com/epistemer/i18n/pull/6)): godoc
+    examples, a README whose quickstart was run for real,
+    [api-review.md](api-review.md), and the CHANGELOG.
+  - **v0.1.0** is tagged, with `i18nschema/v0.1.0`. Both resolve through
+    proxy.golang.org: `go get github.com/epistemer/i18n@v0.1.0` in an empty
+    module builds and runs.
+- **Reviewed:**
+  - [0005](reviews/0005-gemini-m2-review.md): Flash (High), about 382k
+    tokens.
+  - [0006](reviews/0006-gemini-m3-review.md): Flash (High), about 307k.
+  - [0007](reviews/0007-gemini-m4-review.md): Flash (High), about 341k.
+  - [0008](reviews/0008-gemini-m5-review.md): Flash (Medium), about 311k.
+  - Gemini also wrote M2.1 (Flash High, about 205k), which I reviewed.
+  - Across the session, Gemini spent about 3.1M tokens on Flash models;
+    Argon was out of quota throughout.
+  - The catches that mattered:
+    - `Prune` before `Load` could delete a key that came back;
+    - `Vary` was missing when the store read failed;
+    - the first quickstart reseeded translations on every boot, overwriting
+      people's edits.
+- **Decided for you:**
+  - `i18nschema` and the example are separate modules (ADR 0002).
+  - I wrote M3.2 and M4 myself instead of delegating them; each was smaller
+    than writing its brief.
+  - M4.2's done-when now names the example's handler test, since the e2e
+    test runs on cfgx's real store on purpose.
+- **Next:** after v0.1.0, the roadmap's "Later" list. The first Argon (High)
+  review is due once its quota returns, around 2026-11-15. It's a whole-repo
+  review the Flash runs couldn't replace.
+- **Waiting on you:**
+  - Deleting the merged branches (`m0-foundations` through `m5-release`),
+    which the safety checks leave to you.
+  - Whether to move zp onto the library, which is outside this repository.
+
 ## 2026-11-12: M0 and M1, the read path
 
 - **Landed:**

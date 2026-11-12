@@ -100,7 +100,7 @@ A milestone is done when every item meets its done-when.
 - [x] **M5.2** API review of every exported identifier against the interface.
   *Done when:* a written review lists each identifier and how it was checked,
   and its findings are fixed or filed.
-- [ ] **M5.3** CHANGELOG and the `v0.1.0` tag.
+- [x] **M5.3** CHANGELOG and the `v0.1.0` tag.
   *Done when:* `go get github.com/epistemer/i18n@v0.1.0` works through the
   module proxy.
 
