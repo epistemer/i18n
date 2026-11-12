@@ -1,0 +1,7 @@
+# Build and test output
+*.exe
+*.test
+/coverage.out
+
+# Local databases
+*.db
