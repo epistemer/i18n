@@ -12,42 +12,42 @@ A milestone is done when every item meets its done-when.
 
 ### M0. Foundations
 
-- [ ] **M0.1** Module `github.com/epistemer/i18n` (Go 1.26), package docs, the
+- [x] **M0.1** Module `github.com/epistemer/i18n` (Go 1.26), package docs, the
   layout of implementation §1 with empty packages.
   *Done when:* `go build ./...` and `go vet ./...` pass.
-- [ ] **M0.2** CI like cfgx's: gofmt, vet, staticcheck, `go test -race` on
+- [x] **M0.2** CI like cfgx's: gofmt, vet, staticcheck, `go test -race` on
   Linux, macOS and Windows with Go 1.26 and 1.27, and a check that generated
   code is current.
   *Done when:* CI runs green on a PR.
-- [ ] **M0.3** ADR 0001: protobuf generation (`protoc` plus a pinned
+- [x] **M0.3** ADR 0001: protobuf generation (`protoc` plus a pinned
   `protoc-gen-go` tool), `records.proto` and its generated code.
   *Done when:* `go generate ./...` reproduces the committed code.
 
 ### M1. The read path
 
-- [ ] **M1.1** `format.go`: signatures and fit, with `FuzzFit` (implementation §5).
+- [x] **M1.1** `format.go`: signatures and fit, with `FuzzFit` (implementation §5).
   *Done when:* table tests cover every rule in interface §5.2, including
   reused arguments and all three index slots, and the fuzzer runs 10 minutes
   clean.
-- [ ] **M1.2** `locale.go`: `Locale`, canonical codes, base language,
+- [x] **M1.2** `locale.go`: `Locale`, canonical codes, base language,
   Accept-Language parsing (implementation §8).
   *Done when:* table tests cover case, scripts, regions, singletons, invalid
   codes, whitespace, `q=0` and `*` in headers.
-- [ ] **M1.3** `ter.go`: `Ter`, `Ker`, `TKer`, `Tfunc`, the `Static*`
+- [x] **M1.3** `ter.go`: `Ter`, `Ker`, `TKer`, `Tfunc`, the `Static*`
   adapters, `NoneString`.
   *Done when:* each adapter has a test, including nil pointers.
-- [ ] **M1.4** `registry.go`, `key.go`: `Key`, freezing, registry problems,
+- [x] **M1.4** `registry.go`, `key.go`: `Key`, freezing, registry problems,
   `Dynamic`, `DynamicWrap` (implementation §3).
   *Done when:* child-process tests show that `Key` after `Load` panics with the
   key's name, conflicting duplicates fail `Load` all at once, and identical
   duplicates pass.
-- [ ] **M1.5** `store.go`, `translator.go`: layout, records, version check,
+- [x] **M1.5** `store.go`, `translator.go`: layout, records, version check,
   `New`, options, `Load` (implementation §2, §6).
   *Done when:* tests show `Load` writes nothing on an unchanged store, marks
   and unmarks orphans, refuses a newer version, and stores the source record
   only once. Overrides are written straight into the buckets, since `Set`
   comes in M2.
-- [ ] **M1.6** `resolve.go`: `resolveTx`, the resolution order, failure
+- [x] **M1.6** `resolve.go`: `resolveTx`, the resolution order, failure
   behaviour and context helpers (implementation §4).
   *Done when:* table tests cover every step of interface §5.1 using
   hand-written buckets; `-race` passes with concurrent `T` and `Load`; the
@@ -56,7 +56,9 @@ A milestone is done when every item meets its done-when.
 ### M2. Locales and editing
 
 - [ ] **M2.1** Locale management: `Locales`, `Locale`, `CreateLocale`,
-  `UpdateLocale`, `DeleteLocale`, `Source`, `Default`, `Match`.
+  `UpdateLocale`, `DeleteLocale`, `Match`, and `Codes(ctx)`, which needs
+  `Locales`. (`Source` and `Default` landed in M1, because resolution needs
+  them.)
   *Done when:* tests cover canonical codes on every entry point, the source
   locale's protections, and deleting the configured default.
 - [ ] **M2.2** `Set` and `Reset`, with base records and the fit check.
