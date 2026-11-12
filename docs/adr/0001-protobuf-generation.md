@@ -24,11 +24,15 @@ drifted from the `.proto` file.
   `go tool -n protoc-gen-go` as the plugin. Generation needs a POSIX shell,
   but only maintainers and the Linux CI job generate.
 - **Committed output:** `records.pb.go` is committed.
-- **Drift check:** on Linux, CI installs `protoc` from the distribution,
-  regenerates, and runs `git diff --exit-code` with
-  `-I '^//[[:space:]]+protoc[[:space:]]'`. That ignores only the header line
-  that records the `protoc` version, which differs between machines. Any other
-  difference fails the build.
+- **Drift check:** on Linux, CI installs `protoc` from Ubuntu's packages
+  (3.21.x on `ubuntu-latest`, 24.04), regenerates, and runs `git diff
+  --exit-code` with `-I '^//[[:space:]]+protoc[[:space:]]'`. That ignores only
+  the header line that records the `protoc` version. Any other difference
+  fails the build, and so does a generated file that was never committed.
+- **protoc version:** maintainers generate with protoc 3.21.x, matching CI. A
+  much newer protoc may encode the embedded descriptor differently, which the
+  drift check would report. Moving to a newer protoc means moving CI with it,
+  in the same PR.
 
 ## Alternatives
 
@@ -42,7 +46,7 @@ drifted from the `.proto` file.
 
 ## Consequences
 
-- A maintainer needs `protoc` (any 3.x or later) and a POSIX shell to change
+- A maintainer needs `protoc` 3.21.x and a POSIX shell to change
   `records.proto`. Nobody else does.
 - Upgrading `google.golang.org/protobuf` also upgrades the generator, so the
   drift check catches a regeneration that wasn't committed.

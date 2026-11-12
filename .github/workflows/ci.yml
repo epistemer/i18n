@@ -52,19 +52,25 @@ jobs:
         run: go run honnef.co/go/tools/cmd/staticcheck@v0.8.2 ./...
 
       - name: Check go.mod is tidy
-        if: matrix.os == 'ubuntu-latest' && matrix.go == '1.27.x'
-        run: |
-          go mod tidy
-          git diff --exit-code go.mod go.sum
+        if: matrix.os == 'ubuntu-latest' && matrix.go == '1.26.x'
+        run: go mod tidy -diff
 
-      # ADR 0001: regenerate and compare, ignoring only protoc's version line.
+      # ADR 0001: regenerate and compare, ignoring only protoc's version line,
+      # and fail on generated files that were never committed.
       - name: Check generated code is current
-        if: matrix.os == 'ubuntu-latest' && matrix.go == '1.27.x'
+        if: matrix.os == 'ubuntu-latest' && matrix.go == '1.26.x'
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq protobuf-compiler
+          protoc --version
           go generate ./...
           git diff --exit-code -I '^//[[:space:]]+protoc[[:space:]]'
+          untracked=$(git ls-files --others --exclude-standard)
+          if [ -n "$untracked" ]; then
+            echo "Generated but not committed:"
+            echo "$untracked"
+            exit 1
+          fi
 
       - name: Run tests with race detector
         run: go test -race ./...
