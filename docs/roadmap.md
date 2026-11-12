@@ -94,10 +94,10 @@ A milestone is done when every item meets its done-when.
 
 ### M5. Release
 
-- [ ] **M5.1** Godoc examples, and a README with a quickstart run step by step.
+- [x] **M5.1** Godoc examples, and a README with a quickstart run step by step.
   *Done when:* the examples run as tests, and the quickstart's output is pasted
   from a real run.
-- [ ] **M5.2** API review of every exported identifier against the interface.
+- [x] **M5.2** API review of every exported identifier against the interface.
   *Done when:* a written review lists each identifier and how it was checked,
   and its findings are fixed or filed.
 - [ ] **M5.3** CHANGELOG and the `v0.1.0` tag.
