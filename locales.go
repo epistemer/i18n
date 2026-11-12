@@ -171,20 +171,11 @@ func (t *Translator) Match(code string) Locale {
 func (t *Translator) ParseAcceptLanguage(header string) Locale {
 	var out Locale
 	err := t.db.View(func(tx *bolt.Tx) error {
-		tags := acceptLanguage(header)
-		for _, tag := range tags {
-			if l, ok := t.localeTx(tx, tag); ok {
-				out = l
-				return nil
-			}
-			if base := baseLanguage(tag); base != "" {
-				if l, ok := t.localeTx(tx, base); ok {
-					out = l
-					return nil
-				}
-			}
+		if l, ok := t.acceptTx(tx, header); ok {
+			out = l
+		} else {
+			out = t.defaultTx(tx)
 		}
-		out = t.defaultTx(tx)
 		return nil
 	})
 	if err != nil {

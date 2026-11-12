@@ -72,11 +72,11 @@ A milestone is done when every item meets its done-when.
 
 ### M3. HTTP
 
-- [ ] **M3.1** `Middleware` with `IgnoreAcceptLanguage`, `Vary`, and one read
+- [x] **M3.1** `Middleware` with `IgnoreAcceptLanguage`, `Vary`, and one read
   transaction per request.
   *Done when:* `httptest` cases cover cookie, header, default and the
   ignore option, and `Vary` is set exactly when implementation §9 says.
-- [ ] **M3.2** `Cookie`, `SetCookie`, `ClearCookie`.
+- [x] **M3.2** `Cookie`, `SetCookie`, `ClearCookie`.
   *Done when:* tests check every cookie attribute, and that an unknown locale
   returns `ErrUnknownLocale`.
 
