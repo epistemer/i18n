@@ -1,0 +1,32 @@
+// Records the i18n library stores in bbolt. Override text itself is stored
+// raw, not as a message, so lookups never decode anything.
+// See docs/implementation.md, section 2.
+
+syntax = "proto3";
+
+package i18n.store.v1;
+
+option go_package = "github.com/epistemer/i18n/internal/storepb";
+
+// LocaleRecord is the value of locales/<code>.
+message LocaleRecord {
+  string native_name = 1;
+  string flag_code = 2;
+  bool rtl = 3;
+}
+
+// CatalogEntry is the value of catalog/<key>.
+message CatalogEntry {
+  // The code's text at the last Load that registered the key.
+  string text = 1;
+  bytes meta = 2;
+  bool orphaned = 3;
+}
+
+// Base is the value of b:<code>/<key>.
+message Base {
+  // The source text the override was based on.
+  string text = 1;
+  // When Set stored the override, in Unix seconds.
+  int64 set_unix = 2;
+}
