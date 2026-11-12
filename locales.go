@@ -7,6 +7,7 @@ import (
 	"sort"
 
 	bolt "go.etcd.io/bbolt"
+	berrors "go.etcd.io/bbolt/errors"
 )
 
 // Locales returns every locale, sorted by code. The source locale is always
@@ -127,7 +128,7 @@ func (t *Translator) DeleteLocale(code string) error {
 		if err := top.DeleteBucket(n.text); err != nil {
 			return err
 		}
-		if err := top.DeleteBucket(n.base); err != nil && !errors.Is(err, bolt.ErrBucketNotFound) {
+		if err := top.DeleteBucket(n.base); err != nil && !errors.Is(err, berrors.ErrBucketNotFound) {
 			return err
 		}
 		return nil
