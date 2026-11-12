@@ -55,17 +55,17 @@ A milestone is done when every item meets its done-when.
 
 ### M2. Locales and editing
 
-- [ ] **M2.1** Locale management: `Locales`, `Locale`, `CreateLocale`,
+- [x] **M2.1** Locale management: `Locales`, `Locale`, `CreateLocale`,
   `UpdateLocale`, `DeleteLocale`, `Match`, and `Codes(ctx)`, which needs
   `Locales`. (`Source` and `Default` landed in M1, because resolution needs
   them.)
   *Done when:* tests cover canonical codes on every entry point, the source
   locale's protections, and deleting the configured default.
-- [ ] **M2.2** `Set` and `Reset`, with base records and the fit check.
+- [x] **M2.2** `Set` and `Reset`, with base records and the fit check.
   *Done when:* the four zp regression tests pass (implementation §10),
   `-race` passes with concurrent `T`, `Set` and `Reset`, and a misfit `Set` is
   rejected with `ErrFormat`.
-- [ ] **M2.3** `Search`, `Orphans`, `Prune`, and `Entry.Misfit`.
+- [x] **M2.3** `Search`, `Orphans`, `Prune`, and `Entry.Misfit`.
   *Done when:* the orphan lifecycle test passes; a route-style `Prefix` plus
   `Match` query returns only matching keys; `Search` over 1,850 keys is
   benchmarked.
