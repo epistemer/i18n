@@ -4,6 +4,38 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
+## 2026-11-12: M0 and M1, the read path
+
+- **Landed:**
+  - **M0** ([PR #1](https://github.com/epistemer/i18n/pull/1), merged with
+    12 green checks): the module, CI on three OSes and two Go versions, and
+    [ADR 0001](adr/0001-protobuf-generation.md) on protobuf generation.
+  - **M1** (PR #2): the format check, locale codes, the `Ter` adapters, the
+    registry, the store, `New`, `Load`, the resolution order, and the context
+    helpers.
+- **Measured:** a hit in the visitor's locale takes 1.4 µs; a miss through
+  three buckets to the code's text, 2.1 µs. Both are within the plan's
+  budget. `Load` on 1,850 unchanged keys takes 4.9 ms and writes nothing.
+  `FuzzFit` ran 10 minutes (about 10.8 million cases) clean, after it caught
+  one real divergence from `fmt`: a width over 1,000,000.
+- **Reviewed:**
+  - [Review 0003](reviews/0003-gemini-m0-review.md), M0: Gemini 3.8 Flash
+    (Medium), about 274k tokens. 5 of 7 findings accepted; the Windows
+    line-ending fix was the important one.
+  - [Review 0004](reviews/0004-gemini-m1-review.md), M1: Gemini 3.8 Flash
+    (High), about 427k tokens. 8 of 11 findings accepted.
+  - Gemini wrote M1.2 and M1.3 (about 244k tokens), and I reviewed them. I
+    fixed one bug: the singleton rule for private-use tags.
+  - Every Argon tier is still out of quota until about 2026-11-15.
+- **Decided for you:**
+  - I wrote M1.1 (the format check) myself instead of delegating it, because
+    the rest of M1 depends on it.
+  - `Codes(ctx)` moves to M2.1 with `Locales`.
+  - An unknown key renders as itself, never formatted.
+- **Next:** M2. Locale management, `Set` and `Reset`, `Search`, orphans.
+- **Waiting on you:** nothing. Deleting merged branches (`m0-foundations`) is
+  blocked by the safety checks, so they stay until you remove them.
+
 ## 2026-11-12: interface locked, implementation plan, milestones
 
 - **Landed:** the interface is locked, with your decisions and the proposed

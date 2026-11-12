@@ -15,8 +15,10 @@ func (c customStringer) String() string {
 	return c.val
 }
 
+type tfuncKey struct{}
+
 func TestTfunc(t *testing.T) {
-	ctx := context.WithValue(context.Background(), struct{}{}, "val")
+	ctx := context.WithValue(context.Background(), tfuncKey{}, "val")
 	f := Tfunc(func(c context.Context, args ...any) string {
 		if len(args) > 0 {
 			return fmt.Sprintf("called:%v", args[0])
