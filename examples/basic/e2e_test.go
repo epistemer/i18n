@@ -39,7 +39,7 @@ func TestE2E(t *testing.T) {
 	srv := httptest.NewServer(tr.Middleware()(app.Handler(tr)))
 	defer srv.Close()
 
-	get := func(path, header, cookie string) (string, *http.Response) {
+	get := func(path, header, cookie string) (string, int, []*http.Cookie) {
 		t.Helper()
 		req, _ := http.NewRequest(http.MethodGet, srv.URL+path, nil)
 		if header != "" {
@@ -55,7 +55,7 @@ func TestE2E(t *testing.T) {
 		}
 		defer res.Body.Close()
 		body, _ := io.ReadAll(res.Body)
-		return string(body), res
+		return string(body), res.StatusCode, res.Cookies()
 	}
 
 	const arabic = "أهلاً\nمرحباً يا visitor!\n"
@@ -65,19 +65,23 @@ func TestE2E(t *testing.T) {
 		{"Accept-Language", "en-GB, ar;q=0.5", "", english},
 		{"the cookie beats the header", "ar", "en", english},
 	} {
-		if got, _ := get("/", tt.header, tt.cookie); got != tt.want {
+		if got, _, _ := get("/", tt.header, tt.cookie); got != tt.want {
 			t.Errorf("%s: got %q, want %q", tt.name, got, tt.want)
 		}
 	}
 
-	if _, res := get("/locale/en", "", ""); res.StatusCode != http.StatusSeeOther || len(res.Cookies()) != 1 || res.Cookies()[0].Value != "en" {
-		t.Errorf("/locale/en: status %d, cookies %v", res.StatusCode, res.Cookies())
+	_, status, cookies := get("/locale/en", "", "")
+	if status != http.StatusSeeOther || len(cookies) != 1 || cookies[0].Value != "en" {
+		t.Fatalf("/locale/en: status %d, cookies %v", status, cookies)
+	}
+	if got, _, _ := get("/", "ar", cookies[0].Value); got != english {
+		t.Errorf("the picked locale applies on the next request: %q", got)
 	}
 
 	if err := tr.Set("ar", "basic.title", "أهلاً وسهلاً"); err != nil {
 		t.Fatal(err)
 	}
-	if got, _ := get("/", "", ""); got != "أهلاً وسهلاً\nمرحباً يا visitor!\n" {
+	if got, _, _ := get("/", "", ""); got != "أهلاً وسهلاً\nمرحباً يا visitor!\n" {
 		t.Errorf("an edit shows on the next request: %q", got)
 	}
 
@@ -88,7 +92,7 @@ func TestE2E(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if got, _ := get("/", "", ""); got != english {
+	if got, _, _ := get("/", "", ""); got != english {
 		t.Errorf("after changing the Mutable default locale: %q", got)
 	}
 }

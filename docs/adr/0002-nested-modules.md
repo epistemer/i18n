@@ -32,3 +32,8 @@ that depends on bbolt and protobuf only.
 - Releases tag `i18nschema` separately (`i18nschema/v0.1.0` alongside `v0.1.0`).
 - A change to the core that the example needs is tested in the same PR,
   through the `replace`.
+- The example builds only inside a clone of this repository: its `replace`
+  directives point at the local core and `i18nschema`, so
+  `go run github.com/epistemer/i18n/examples/basic@version` won't work. That's
+  the same trade-off cfgx's examples make; the example is for reading and
+  running from a clone.

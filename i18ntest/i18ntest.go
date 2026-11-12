@@ -26,13 +26,14 @@ func New(tb testing.TB, source i18n.Locale, opts ...i18n.Option) *i18n.Translato
 	return t
 }
 
-// Context returns a context carrying t and the locale with this code. It fails
-// tb if the locale doesn't exist.
+// Context returns a context carrying t and the locale with this code, derived
+// from tb.Context(), so it's canceled when the test ends. It fails tb if the
+// locale doesn't exist.
 func Context(tb testing.TB, t *i18n.Translator, code string) context.Context {
 	tb.Helper()
 	l, ok := t.Locale(code)
 	if !ok {
 		tb.Fatalf("i18ntest: no locale %q", code)
 	}
-	return i18n.WithContext(context.Background(), t, l)
+	return i18n.WithContext(tb.Context(), t, l)
 }

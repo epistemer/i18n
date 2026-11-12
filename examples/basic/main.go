@@ -8,6 +8,9 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/epistemer/i18n"
 	"github.com/epistemer/i18n/examples/basic/internal/app"
@@ -22,22 +25,26 @@ var English = i18n.Locale{Code: "en", NativeName: "English", FlagCode: "us"}
 var _ i18n.Config = (*settings.Serve)(nil)
 
 func main() {
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	defer stop()
 	root := &cobra.Command{Use: "basic", Short: "An i18n example"}
 	settings.BindRoot(root)
 	root.AddCommand(settings.ServeCommand(&cobra.Command{Use: "serve", Short: "Run the HTTP server"}, serve))
-	if err := root.Execute(); err != nil {
+	if err := root.ExecuteContext(ctx); err != nil {
+		stop()
 		os.Exit(1)
 	}
 }
 
-// Setup loads the translations and makes sure the example's Arabic locale
-// exists.
+// Setup makes sure the example's Arabic locale exists, then loads the
+// translations. Creating the locale first keeps Load from warning that a
+// configured default locale is missing.
 func Setup(s *settings.Serve) (*i18n.Translator, error) {
 	tr := i18n.New(s.Store().DB(), English, s, i18n.WithLogger(slog.Default()))
-	if err := tr.Load(); err != nil {
+	if err := tr.CreateLocale(i18n.Locale{Code: "ar", NativeName: "العربية", FlagCode: "eg", RTL: true}); err != nil && !errors.Is(err, i18n.ErrLocaleExists) {
 		return nil, err
 	}
-	if err := tr.CreateLocale(i18n.Locale{Code: "ar", NativeName: "العربية", FlagCode: "eg", RTL: true}); err != nil && !errors.Is(err, i18n.ErrLocaleExists) {
+	if err := tr.Load(); err != nil {
 		return nil, err
 	}
 	return tr, nil
@@ -49,9 +56,16 @@ func serve(ctx context.Context, s *settings.Serve) error {
 		return err
 	}
 	srv := &http.Server{Addr: s.ServerAddr(), Handler: tr.Middleware()(app.Handler(tr))}
+	done := make(chan struct{})
+	defer close(done)
 	go func() {
-		<-ctx.Done()
-		srv.Close()
+		select {
+		case <-ctx.Done():
+			shutdown, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			defer cancel()
+			_ = srv.Shutdown(shutdown)
+		case <-done: // ListenAndServe failed
+		}
 	}()
 	slog.Info("serving", "addr", s.ServerAddr())
 	if err := srv.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {

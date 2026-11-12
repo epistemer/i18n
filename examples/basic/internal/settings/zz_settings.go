@@ -25,13 +25,13 @@ type values struct {
 var keys = [...]engine.Key[values]{
 	{
 		Path: "i18n.default_locale", Env: "BASIC_I18N_DEFAULT_LOCALE", Flag: "i18n-default-locale",
-		Type: "string", Desc: "Locale for visitors who haven't chosen one and whose browser languages match none; empty means the source locale", Mutable: true, Quote: true,
+		Type: "string", Desc: "Locale for visitors without a chosen locale; empty means the source locale", Mutable: true, Quote: true,
 		Set:    func(v *values, raw string) error { return engine.ParseString(raw, &v.I18nDefaultLocale) },
 		IsSet:  func(v *values) bool { return v.I18nDefaultLocale != "" },
 		Show:   func(v *values) any { return v.I18nDefaultLocale },
 		Format: func(v *values) (string, error) { return v.I18nDefaultLocale, nil },
 		Kind:   "string",
-		Schema: `{"description":"Locale for visitors who haven't chosen one and whose browser languages match none; empty means the source locale","type":"string"}`,
+		Schema: `{"description":"Locale for visitors without a chosen locale; empty means the source locale","type":"string"}`,
 	},
 	{
 		Path: "server.addr", Env: "BASIC_SERVER_ADDR", Flag: "server-addr",
@@ -84,7 +84,7 @@ type I18n interface {
 
 type i18nGroup struct{ r *root }
 
-// I18nDefaultLocale returns i18n.default_locale: Locale for visitors who haven't chosen one and whose browser languages match none; empty means the source locale
+// I18nDefaultLocale returns i18n.default_locale: Locale for visitors without a chosen locale; empty means the source locale
 func (g *i18nGroup) I18nDefaultLocale() string { return g.r.cur.Load().I18nDefaultLocale }
 
 // Server is the server group: HTTP server
@@ -113,7 +113,7 @@ func (g *storageGroup) StorageBolt() string { return g.r.cur.Load().StorageBolt 
 // value, so the flag, env var, config file or default applies again.
 type Update struct{ e *engine.Edits[values] }
 
-// SetI18nDefaultLocale sets i18n.default_locale: Locale for visitors who haven't chosen one and whose browser languages match none; empty means the source locale
+// SetI18nDefaultLocale sets i18n.default_locale: Locale for visitors without a chosen locale; empty means the source locale
 func (u *Update) SetI18nDefaultLocale(v string) {
 	u.e.Set(0, func(c *values) { c.I18nDefaultLocale = v })
 }

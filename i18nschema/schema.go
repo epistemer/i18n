@@ -16,7 +16,7 @@ import "github.com/epistemer/cfgx/dsl"
 func Group() *dsl.GroupDef {
 	return dsl.Group("i18n", "Translations",
 		dsl.String("default_locale",
-			"Locale for visitors who haven't chosen one and whose browser languages match none; empty means the source locale").
+			"Locale for visitors without a chosen locale; empty means the source locale").
 			Mutable(),
 	).GoName("I18n") // pins the getter prefix, whatever the app's initialisms
 }
