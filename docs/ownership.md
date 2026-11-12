@@ -27,6 +27,8 @@
   release's done-when is met.
 - Manages agy: which tasks Gemini takes, which model and effort each gets, and
   when to review or redo its work.
+- Keeps the global Claude Code skill (`~/.claude/skills/i18n/`) in step with
+  the public API.
 
 ## What comes back to you
 

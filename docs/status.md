@@ -4,6 +4,20 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
+## 2026-11-12: a skill for using i18n
+
+- **Landed:** a global Claude Code skill, `~/.claude/skills/i18n/`, like
+  cfgx's. `SKILL.md` covers the model, the workflow for a new text, key
+  naming, the rules, locales, use outside requests, an admin page, tests and
+  gotchas. `reference.md` lists every identifier. Every API claim in it was
+  compiled against v0.1.0 from the module proxy. Your global CLAUDE.md points
+  to it.
+- **Corrected:** the previous entry asked whether to move zp onto the
+  library. That's not a question: neozp is built from scratch.
+- **Next:** unchanged. The Argon (High) whole-repo review once its quota
+  returns, then the roadmap's "Later" list.
+- **Waiting on you:** nothing beyond deleting the merged branches.
+
 ## 2026-11-12: M2–M5, v0.1.0 released
 
 - **Landed:**
@@ -46,10 +60,11 @@ taken for you, what's next, and what's waiting on you. The terms are in
 - **Next:** after v0.1.0, the roadmap's "Later" list. The first Argon (High)
   review is due once its quota returns, around 2026-11-15. It's a whole-repo
   review the Flash runs couldn't replace.
-- **Waiting on you:**
-  - Deleting the merged branches (`m0-foundations` through `m5-release`),
-    which the safety checks leave to you.
-  - Whether to move zp onto the library, which is outside this repository.
+- **Waiting on you:** deleting the merged branches (`m0-foundations` through
+  `m5-release`), which the safety checks leave to you. (An earlier version
+  of this entry asked whether to move zp onto the library. That was wrong:
+  zp isn't ported. neozp is built from scratch, and zp's business side moves
+  over in one go once the framework is mature.)
 
 ## 2026-11-12: M0 and M1, the read path
 
