@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -129,5 +130,51 @@ func TestCookies(t *testing.T) {
 	tr.ClearCookie(rec)
 	if got := rec.Result().Cookies(); len(got) != 1 || got[0].MaxAge != -1 || got[0].Name != "i18n-language" {
 		t.Errorf("ClearCookie wrote %+v", got)
+	}
+}
+
+func TestMiddleware_MultipleHeaderLines(t *testing.T) {
+	tr := httpSetup(t)
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	req.Header.Add("Accept-Language", "de;q=0.2")
+	req.Header.Add("Accept-Language", "fr;q=1.0")
+	if got, _ := serve(t, tr, req); got != "fr" {
+		t.Errorf("locale = %q, want fr from the second line", got)
+	}
+}
+
+func TestMiddleware_AttachesTranslator(t *testing.T) {
+	tr := httpSetup(t)
+	var got *Translator
+	h := tr.Middleware()(http.HandlerFunc(func(_ http.ResponseWriter, r *http.Request) {
+		got = FromContext(r.Context())
+	}))
+	h.ServeHTTP(httptest.NewRecorder(), httptest.NewRequest(http.MethodGet, "/", nil))
+	if got != tr {
+		t.Error("the handler's context doesn't carry the Translator")
+	}
+}
+
+func TestMiddleware_StoreFailure(t *testing.T) {
+	tr := httpSetup(t)
+	tr.db.Close()
+	got, rec := serve(t, tr, httptest.NewRequest(http.MethodGet, "/", nil))
+	if got != "en" {
+		t.Errorf("with the store closed, locale = %q, want the source", got)
+	}
+	if rec.Header().Get("Vary") != "Accept-Language" {
+		t.Error("Vary must be set even when the store read fails")
+	}
+}
+
+func TestClearCookie_Wire(t *testing.T) {
+	tr := New(testDB(t), english, nil, withRegistry(release()), WithCookie("lang"))
+	rec := httptest.NewRecorder()
+	tr.ClearCookie(rec)
+	raw := rec.Header().Get("Set-Cookie")
+	for _, want := range []string{"lang=", "Path=/", "Max-Age=0", "Expires=Thu, 01 Jan 1970 00:00:01 GMT", "SameSite=Lax"} {
+		if !strings.Contains(raw, want) {
+			t.Errorf("Set-Cookie %q lacks %q", raw, want)
+		}
 	}
 }

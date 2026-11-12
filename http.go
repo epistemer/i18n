@@ -3,6 +3,8 @@ package i18n
 import (
 	"fmt"
 	"net/http"
+	"strings"
+	"time"
 
 	bolt "go.etcd.io/bbolt"
 )
@@ -60,7 +62,9 @@ func (t *Translator) requestLocale(r *http.Request, o middlewareOptions) (Locale
 		}
 		if !o.ignoreAcceptLanguage {
 			negotiated = true
-			if found, ok := t.acceptTx(tx, r.Header.Get("Accept-Language")); ok {
+			// HTTP allows the list to span several header lines.
+			header := strings.Join(r.Header.Values("Accept-Language"), ",")
+			if found, ok := t.acceptTx(tx, header); ok {
 				l = found
 				return nil
 			}
@@ -70,7 +74,8 @@ func (t *Translator) requestLocale(r *http.Request, o middlewareOptions) (Locale
 	})
 	if err != nil {
 		t.readFailed(err)
-		return t.source, negotiated
+		// The header would have taken part, so caches must still vary on it.
+		return t.source, !o.ignoreAcceptLanguage
 	}
 	return l, negotiated
 }
@@ -121,7 +126,16 @@ func (t *Translator) SetCookie(w http.ResponseWriter, code string) error {
 }
 
 // ClearCookie removes the visitor's chosen locale, so Accept-Language and the
-// default decide again.
+// default decide again. An app that set Domain or Secure on its cookie must
+// clear it with the same attributes: browsers keep a cookie that a clearing
+// cookie doesn't match.
 func (t *Translator) ClearCookie(w http.ResponseWriter) {
-	http.SetCookie(w, &http.Cookie{Name: t.cookie, Value: "", Path: "/", MaxAge: -1, SameSite: http.SameSiteLaxMode})
+	http.SetCookie(w, &http.Cookie{
+		Name:     t.cookie,
+		Value:    "",
+		Path:     "/",
+		MaxAge:   -1,              // Max-Age=0
+		Expires:  time.Unix(1, 0), // for clients that ignore Max-Age
+		SameSite: http.SameSiteLaxMode,
+	})
 }
