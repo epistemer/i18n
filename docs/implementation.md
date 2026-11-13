@@ -26,6 +26,10 @@ examples/basic/          a net/http app wired with cfgx, run by the e2e tests (i
 Dependencies: `go.etcd.io/bbolt` (v1.5.0, as cfgx), `google.golang.org/protobuf`.
 `i18nschema` adds `github.com/epistemer/cfgx`. Go 1.26, like cfgx.
 
+Planned (roadmap M6, [ADR 0003](adr/0003-labels-generator.md)): the `labels`
+generator, a metafile and a template with no Go code. Where it sits in the
+module is decided by the neozp generation driver's discovery spike.
+
 ## 2. The store
 
 ### 2.1 Layout

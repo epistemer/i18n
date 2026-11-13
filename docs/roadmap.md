@@ -1,7 +1,7 @@
 # Roadmap
 
-The order of work up to v0.1.0, then the ideas parked for after v1. The
-contract is the locked [interface](interface.md); how it's built is in
+The order of work up to v0.1.0, then v0.2.0, then the ideas parked for after
+v1. The contract is the locked [interface](interface.md); how it's built is in
 [implementation.md](implementation.md). Progress is logged in
 [status.md](status.md).
 
@@ -116,6 +116,39 @@ Model choice follows the global rules: Argon (High) for the pre-merge review
 of each milestone, Argon (Medium) or Flash (High) for well-specified code,
 Flash (Medium) for mechanical work. When a model is cooling down, the strongest
 available one runs instead, and the status log says which.
+
+## v0.2.0
+
+### M6. The labels generator
+
+[ADR 0003](adr/0003-labels-generator.md): i18n ships a `labels` generator as
+data, and generators such as cfgx write `labels/v1` files for it. The items
+wait on the neozp generation driver (working name `genx`): M6.1 and M6.2 on
+its frozen metafile format and its test helper, M6.3 on its first release and
+on cfgx's roadmap item M11.1.
+
+- [ ] **M6.1** The `labels` generator: the metafile and the template, placed
+  where the driver's discovery spike says, with tests in a nested module (as
+  ADR 0002 does for cfgx) so the core never requires the driver.
+  *Done when:* rendering the labels of cfgx's zp example gives the same
+  declarations as the file cfgx's `App.I18n()` wrote (the fixture is copied
+  from cfgx at commit `5a1759c`), and golden tests cover two label files for
+  one package, several packages, a label with neither `var` nor `path`, a
+  package where no label has a path, and text that needs quoting.
+- [ ] **M6.2** The checks: one key has one text across the app; in a
+  package, no two labels share a `var` or a `path`.
+  *Done when:* each check has a test whose message names the key or
+  identifier and the producers involved.
+- [ ] **M6.3** `examples/basic` generates through the driver: cfgx's
+  `App.Labels()` writes the settings labels, this generator writes the Go,
+  and CI checks that both are current.
+  *Done when:* the example's test fails on a stale labels file, and the e2e
+  test shows a translated settings label.
+- [ ] **M6.4** Interface §2 and §11 rewritten, with a section on the
+  generator; README; CHANGELOG; the `v0.2.0` tag.
+  *Done when:* `go get github.com/epistemer/i18n@v0.2.0` works through the
+  module proxy, and the driver finds the generator from that version in an
+  app that only requires i18n.
 
 ## Later
 
