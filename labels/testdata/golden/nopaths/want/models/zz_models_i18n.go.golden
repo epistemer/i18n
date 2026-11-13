@@ -1,0 +1,10 @@
+// Code generated from labels by github.com/epistemer/i18n. DO NOT EDIT.
+
+package models
+
+import "github.com/epistemer/i18n"
+
+var (
+	L10nRoleAdmin = i18n.Key("enum.role.admin", "admin")
+	L10nRoleGuest = i18n.Key("enum.role.guest", "guest")
+)

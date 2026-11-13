@@ -1,0 +1,13 @@
+// Code generated from labels by github.com/epistemer/i18n. DO NOT EDIT.
+
+package settings
+
+import "github.com/epistemer/i18n"
+
+// l10n holds every label that has a path.
+var l10n = map[string]i18n.TKer{
+	"log.level.debug": i18n.Key("settings.log.level.debug", "debug"),
+}
+
+// L10n returns the label at path, or nil when there is none.
+func L10n(path string) i18n.TKer { return l10n[path] }

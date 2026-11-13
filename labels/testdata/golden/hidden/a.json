@@ -1,0 +1,2 @@
+{"domain": "labels/v1", "producer": "routes", "package": {"name": "routes", "dir": "routes"},
+ "labels": [{"key": "route.orders.index", "text": "Orders"}, {"key": "route.home", "text": "Home", "var": "L10nHome"}]}

@@ -1,0 +1,9 @@
+// Code generated from labels by github.com/epistemer/i18n. DO NOT EDIT.
+
+package main
+
+import "github.com/epistemer/i18n"
+
+var (
+	L10nTitle = i18n.Key("page.title", "Title")
+)

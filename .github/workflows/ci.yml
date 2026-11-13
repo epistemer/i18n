@@ -50,7 +50,7 @@ jobs:
       - name: Run staticcheck
         if: matrix.os == 'ubuntu-latest' && matrix.go == '1.27.x'
         run: |
-          for m in . i18nschema examples/basic; do
+          for m in . i18nschema labels examples/basic; do
             (cd "$m" && go run honnef.co/go/tools/cmd/staticcheck@v0.8.2 ./...)
           done
 
@@ -58,7 +58,7 @@ jobs:
       - name: Check every go.mod is tidy
         if: matrix.os == 'ubuntu-latest' && matrix.go == '1.26.x'
         run: |
-          for m in . i18nschema examples/basic; do
+          for m in . i18nschema labels examples/basic; do
             (cd "$m" && go mod tidy -diff)
           done
 
@@ -86,7 +86,7 @@ jobs:
       # stale generated settings, and the end-to-end test over HTTP.
       - name: Test nested modules
         run: |
-          for m in i18nschema examples/basic; do
+          for m in i18nschema labels examples/basic; do
             echo "== $m"
             (cd "$m" && go vet ./... && go test -race ./...)
           done

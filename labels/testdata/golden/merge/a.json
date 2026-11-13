@@ -1,0 +1,2 @@
+{"domain": "labels/v1", "producer": "settings", "package": {"name": "settings", "dir": "internal/settings"},
+ "labels": [{"key": "settings.port", "text": "Port", "path": "port", "var": "L10nPort"}]}

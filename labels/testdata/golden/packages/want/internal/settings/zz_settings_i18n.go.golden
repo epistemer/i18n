@@ -1,0 +1,9 @@
+// Code generated from labels by github.com/epistemer/i18n. DO NOT EDIT.
+
+package settings
+
+import "github.com/epistemer/i18n"
+
+var (
+	L10nPort = i18n.Key("settings.port", "Port")
+)
