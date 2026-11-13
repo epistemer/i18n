@@ -56,19 +56,21 @@ text from it: that comes from the running code.
 
 ```
 github.com/epistemer/i18n             the core: keys, Translator, T, middleware
+                                      + genx.meta.yaml, labels.go.tmpl: the labels generator (§3.4)
 github.com/epistemer/i18n/i18nschema  cfgx schema fragment (the only package that imports cfgx)
 github.com/epistemer/i18n/i18ntest    test helpers
+github.com/epistemer/i18n/labels      the generator's tests, a nested module (requires genx)
 ```
 
-The core depends on bbolt and protobuf only. Code generators that read an
-app's schema (tables, enums, routes) belong to the packages that own models and
-routes. They emit `i18n.Key` calls like any hand-written code.
+The core depends on bbolt and protobuf only. The `labels` generator is data
+in the core package's directory, which genx reads; it adds no Go API and no
+dependency.
 
-> **Changing ([ADR 0003](adr/0003-labels-generator.md)).** Those packages will
-> write their labels as data, in `labels/v1` files, and i18n will ship one
-> generator, `labels`, that turns the files into `i18n.Key` declarations. It
-> ships as a metafile and a template, with no Go package and no new
-> dependency. This section stands as written until roadmap M6.4 rewrites it.
+Code generators that read an app's schema (tables, enums, routes, cfgx's
+settings) belong to the packages that own them. They don't import i18n:
+they write their labels as data, in `labels/v1` files, and i18n's `labels`
+generator turns every such file into `i18n.Key` declarations
+([ADR 0003](adr/0003-labels-generator.md)).
 
 ---
 
@@ -160,6 +162,59 @@ renaming one is a new key ([roadmap](roadmap.md#renaming-keys)).
 
 zp's `StaticDecimal` and `StaticDecimalOtional` stay in the app, because they
 pull in shopspring/decimal. A `decimal.Decimal` works with `StaticStringer`.
+
+### 3.4 Generated labels: the `labels` generator
+
+Generated code declares keys like hand-written code, through a trivial
+generator that the neozp generation driver,
+[genx](https://github.com/epistemer/genx), runs. An app switches it on in
+its `genx.yaml`:
+
+```yaml
+use:
+  - github.com/epistemer/i18n: [labels]
+```
+
+It reads every `labels/v1` file in the app (genx's interface §11: a key,
+the English text, and optionally a `var` and a `path` for each label) and
+writes one file per package, `<dir>/zz_<package>_i18n.go`:
+
+```go
+// Code generated from labels by github.com/epistemer/i18n. DO NOT EDIT.
+
+package settings
+
+import "github.com/epistemer/i18n"
+
+var (
+	L10nServer     = i18n.Key("settings.server", "HTTP server")
+	L10nServerAddr = i18n.Key("settings.server.addr", "Listen address")
+)
+
+// l10n holds every label that has a path.
+var l10n = map[string]i18n.TKer{
+	"server":          L10nServer,
+	"server.addr":     L10nServerAddr,
+	"log.format.json": i18n.Key("settings.log.format.json", "json"),
+}
+
+// L10n returns the label at path, or nil when there is none.
+func L10n(path string) i18n.TKer { return l10n[path] }
+```
+
+- A label with a `var` is a variable of that name. One with only a `path`
+  is declared in `l10n`. One with neither is still declared, as `_`, so
+  it's editable and not an orphan.
+- `l10n` and `L10n(path)` appear only when a label of the package has a
+  path. Generic code, such as a settings page, finds a label by the path
+  its data gives.
+- Labels keep their order: files in path order, then each file's order.
+- The generator stops the run, naming the producers involved, when one key
+  has two texts anywhere in the app, when a package declares a `var` or a
+  `path` twice, or when one directory gets two package names.
+
+Keys from labels files follow §3.1 like any other: they're permanent, and
+their texts are the English that people translate.
 
 ---
 
@@ -501,9 +556,8 @@ Both use the process's registry, so a component test sees the app's real keys.
   ([roadmap](roadmap.md)).
 - Reading zp's existing store layout. Moving zp's data is a one-off migration
   for the app, written against the layout in implementation.md.
-- Generators for keys derived from an app's schema. (Changing with
-  [ADR 0003](adr/0003-labels-generator.md): reading a schema stays out of
-  scope, but i18n will ship the `labels` generator that writes the keys.)
+- Reading an app's schema. The packages that own tables, enums, routes and
+  settings write `labels/v1` files; i18n only turns them into keys (§3.4).
 
 ---
 
@@ -523,7 +577,7 @@ Both use the process's registry, so a component test sees the app's real keys.
 |------|--------|
 | 2026-11-12 | From [review 0001](reviews/0001-gemini-design-review.md): base-language step in §5.1; overrides that no longer fit are skipped, and fit allows indexed omission (§5.2, §8.2, §9); empty text stays empty; canonical locale codes (§6.1); `Match` (§6.2); `Cookie` and `ClearCookie` (§7); D1 names the catalog; single-transaction `Search`; failure behavior of `T`; `Dynamic` keys must be registered. Made in place, before the lock |
 | 2026-11-12 | Locked by epistemer, with D1's override-only store and the proposed answers to §12 |
-| 2026-11-13 | **The `labels` generator** ([ADR 0003](adr/0003-labels-generator.md)). i18n ships one generator, as data: a metafile and a template that the neozp generation driver runs. It reads every `labels/v1` file in the app and writes `zz_<package>_i18n.go` per package: a variable for each label that names one, and `L10n(path)` over the labels that have a path. It fails when one key has two texts in the app, or when a package declares a variable or a path twice. No new exported Go API and no new dependency (§2, §11). Direction chosen by epistemer: one generation pipeline over shared metadata, in place of each generator writing `i18n.Key` calls from its own template. What the file holds and what's checked decided by Claude; overturnable. **Takes effect with roadmap M6**; until then §2 and §11 stand as written |
+| 2026-11-13 | **The `labels` generator** ([ADR 0003](adr/0003-labels-generator.md)). i18n ships one generator, as data: a metafile and a template that the neozp generation driver runs. It reads every `labels/v1` file in the app and writes `zz_<package>_i18n.go` per package: a variable for each label that names one, and `L10n(path)` over the labels that have a path. It fails when one key has two texts in the app, or when a package declares a variable or a path twice. No new exported Go API and no new dependency (§2, §11). Direction chosen by epistemer: one generation pipeline over shared metadata, in place of each generator writing `i18n.Key` calls from its own template. What the file holds and what's checked decided by Claude; overturnable. In effect from v0.2.0 (§2, §3.4, §11) |
 
 ---
 

@@ -147,7 +147,7 @@ M6.4 on its `v0.1.0`.
   and CI checks that both are current.
   *Done when:* the example's test fails on a stale labels file, and the e2e
   test shows a translated settings label.
-- [ ] **M6.4** Interface §2 and §11 rewritten, with a section on the
+- [x] **M6.4** Interface §2 and §11 rewritten, with a section on the
   generator; README; CHANGELOG; the `v0.2.0` tag.
   *Done when:* `go get github.com/epistemer/i18n@v0.2.0` works through the
   module proxy, and the driver finds the generator from that version in an
