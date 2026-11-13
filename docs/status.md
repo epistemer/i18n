@@ -35,8 +35,8 @@ taken for you, what's next, and what's waiting on you. The terms are in
 - **Not reviewed yet:** this session ran in Claude's cloud workspace, which
   can't reach agy, so Gemini hasn't seen the ADR. The PR is the place for
   that review.
-- **Next:** nothing in i18n until the driver freezes its metafile format;
-  then M6.1.
+- **Next:** nothing in i18n until the driver freezes its metafile format
+  (driver M1.6, in the roadmap parked in cfgx's `docs/neozp/`); then M6.1.
 - **Waiting on you:**
   - the PR;
   - a name and a repository for the driver (working name `genx`);

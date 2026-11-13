@@ -26,8 +26,8 @@ the rule costs:
 - Nothing sees every key before the app starts. A key declared with two
   different texts is caught by `Load`, at startup (interface §3.1, §9).
 
-**neozp ADR 0001** (2026-11-13) replaces the rule for the whole framework. In
-short:
+**[neozp ADR 0001](https://github.com/epistemer/cfgx/blob/main/docs/neozp/0001-generation-pipeline.md)**
+(2026-11-13) replaces the rule for the whole framework. In short:
 
 - A generator publishes data files in named, versioned shapes, called
   *domains*. It doesn't write code for another package.
@@ -39,8 +39,10 @@ short:
 - Labels are the first shared domain, `labels/v1`. Every producer writes it,
   and i18n reads only that.
 
-That record is kept in the neozp project until the driver has a repository.
-Where this ADR repeats part of it, that record is the reference.
+That record and the
+[driver's roadmap](https://github.com/epistemer/cfgx/blob/main/docs/neozp/genx-roadmap.md)
+are parked in cfgx's repository, under `docs/neozp/`, until the driver has
+one. Where this ADR repeats part of the record, the record is the reference.
 [cfgx ADR 0008](https://github.com/epistemer/cfgx/blob/main/docs/adr/0008-labels-as-data.md)
 is the first producer's side.
 
@@ -239,6 +241,6 @@ func L10n(path string) i18n.TKer { return l10n[path] }
 - An app needs the driver to get the generated labels. i18n itself works as
   before without it.
 - The roadmap gains M6 and a `v0.2.0`. M6.1 and M6.2 wait on the driver's
-  frozen metafile format, M6.3 on its first release and on cfgx M11.1.
+  frozen metafile format, M6.3 on its release candidate and on cfgx M11.1.
 - The Claude Code skill (`~/.claude/skills/i18n/`) needs a section on
   generated labels once M6 lands.

@@ -123,9 +123,12 @@ available one runs instead, and the status log says which.
 
 [ADR 0003](adr/0003-labels-generator.md): i18n ships a `labels` generator as
 data, and generators such as cfgx write `labels/v1` files for it. The items
-wait on the neozp generation driver (working name `genx`): M6.1 and M6.2 on
-its frozen metafile format and its test helper, M6.3 on its first release and
-on cfgx's roadmap item M11.1.
+wait on the neozp generation driver (working name `genx`), whose
+[roadmap](https://github.com/epistemer/cfgx/blob/main/docs/neozp/genx-roadmap.md)
+is parked in cfgx's repository until it has its own: M6.1 and M6.2 on its
+frozen metafile format (driver M1.6) and its test helper (driver M7.3), M6.3
+on its release candidate (driver M8.1) and on cfgx's roadmap item M11.1, and
+M6.4 on its `v0.1.0`.
 
 - [ ] **M6.1** The `labels` generator: the metafile and the template, placed
   where the driver's discovery spike says, with tests in a nested module (as
