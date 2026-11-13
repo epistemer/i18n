@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
+	"go/parser"
+	"go/token"
 	"os"
 	"path/filepath"
 	"sort"
@@ -31,7 +33,13 @@ func render(t testing.TB, dir string) map[string][]byte {
 	for _, f := range files {
 		in = append(in, genxtest.Input{Path: f})
 	}
-	return genxtest.Render(t, i18nDir, "labels", in...)
+	out := genxtest.Render(t, i18nDir, "labels", in...)
+	for p, b := range out {
+		if _, err := parser.ParseFile(token.NewFileSet(), p, b, parser.AllErrors); err != nil {
+			t.Errorf("%s doesn't parse as Go: %v", p, err)
+		}
+	}
+	return out
 }
 
 // declarations drops comments and blank lines, which carry no declaration.
@@ -133,7 +141,7 @@ func TestChecks(t *testing.T) {
 		{"twotexts", "labels: one key, two texts: settings.title (enums, settings)"},
 		{"twovars", "labels: declared twice in package internal/settings: var L10nTitle (enums, settings)"},
 		{"twopaths", "labels: declared twice in package internal/settings: path title (enums, settings)"},
-		{"twonames", "labels: package internal/settings is named config and settings (enums, settings)"},
+		{"twonames", "labels: package internal/settings has two names: config (enums), settings (routes, settings)"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.dir, func(t *testing.T) {

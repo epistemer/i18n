@@ -22,9 +22,9 @@ generators:
 
       # One unit per package that has labels; its files' labels in path order.
       | $files | group_by(.package.dir)[]
-      | (map(.package.name) | unique) as $names
-      | if ($names | length) > 1
-        then error("labels: package \(.[0].package.dir) is named \($names | join(" and ")) (\(producers))")
+      | if (map(.package.name) | unique | length) > 1
+        then error("labels: package \(.[0].package.dir) has two names: "
+                   + (group_by(.package.name) | map("\(.[0].package.name) (\(producers))") | join(", ")))
         else . end
       | {package: .[0].package, labels: [.[] | .producer as $p | .labels[] | norm($p)]}
       | select(.labels != [])

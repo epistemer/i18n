@@ -1,0 +1,2 @@
+{"domain": "labels/v1", "producer": "routes", "package": {"name": "settings", "dir": "internal/settings"},
+ "labels": [{"key": "route.x", "text": "x"}]}
