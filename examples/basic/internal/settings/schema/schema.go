@@ -21,7 +21,8 @@ var Server = dsl.Group("server", "HTTP server",
 // App is the example's schema.
 var App = dsl.App("basic", "An i18n example", I18n, Server, dsl.Group("storage", "Storage", Bolt)).
 	EnvPrefix("BASIC").
-	Store(Bolt)
+	Store(Bolt).
+	Labels() // the settings' labels, as labels/v1 for i18n's generator
 
 // Serve runs the HTTP server.
 var Serve = dsl.Command("Serve").Uses(I18n, Server)

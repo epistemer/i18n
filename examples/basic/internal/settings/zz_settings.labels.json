@@ -1,0 +1,46 @@
+{
+  "domain": "labels/v1",
+  "labels": [
+    {
+      "key": "settings.i18n",
+      "path": "i18n",
+      "text": "Translations",
+      "var": "L10nI18n"
+    },
+    {
+      "key": "settings.i18n.default_locale",
+      "path": "i18n.default_locale",
+      "text": "Locale for visitors without a chosen locale; empty means the source locale",
+      "var": "L10nI18nDefaultLocale"
+    },
+    {
+      "key": "settings.server",
+      "path": "server",
+      "text": "HTTP server",
+      "var": "L10nServer"
+    },
+    {
+      "key": "settings.server.addr",
+      "path": "server.addr",
+      "text": "Listen address",
+      "var": "L10nServerAddr"
+    },
+    {
+      "key": "settings.storage",
+      "path": "storage",
+      "text": "Storage",
+      "var": "L10nStorage"
+    },
+    {
+      "key": "settings.storage.bolt",
+      "path": "storage.bolt",
+      "text": "Store file",
+      "var": "L10nStorageBolt"
+    }
+  ],
+  "package": {
+    "dir": "internal/settings",
+    "name": "settings"
+  },
+  "producer": "cfgx"
+}

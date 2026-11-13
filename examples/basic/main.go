@@ -1,6 +1,9 @@
 // Command basic is a small web app that translates its text with i18n, and
-// takes its default locale from a Mutable cfgx setting.
+// takes its default locale from a Mutable cfgx setting. Its settings'
+// labels are translation keys too, generated through genx.
 package main
+
+//go:generate go tool genx
 
 import (
 	"context"

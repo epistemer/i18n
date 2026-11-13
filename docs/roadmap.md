@@ -142,7 +142,7 @@ M6.4 on its `v0.1.0`.
   package, no two labels share a `var` or a `path`.
   *Done when:* each check has a test whose message names the key or
   identifier and the producers involved.
-- [ ] **M6.3** `examples/basic` generates through the driver: cfgx's
+- [x] **M6.3** `examples/basic` generates through the driver: cfgx's
   `App.Labels()` writes the settings labels, this generator writes the Go,
   and CI checks that both are current.
   *Done when:* the example's test fails on a stale labels file, and the e2e

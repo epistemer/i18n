@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/epistemer/cfgx"
+	"github.com/epistemer/i18n"
 	"github.com/epistemer/i18n/examples/basic/internal/app"
 	"github.com/epistemer/i18n/examples/basic/internal/settings"
 )
@@ -83,6 +84,19 @@ func TestE2E(t *testing.T) {
 	}
 	if got, _, _ := get("/", "", ""); got != "أهلاً وسهلاً\nمرحباً يا visitor!\n" {
 		t.Errorf("an edit shows on the next request: %q", got)
+	}
+
+	// A setting's label is a translation key too, generated through genx:
+	// a settings page shows it in the visitor's locale.
+	if err := tr.Set("ar", "settings.server.addr", "عنوان الاستماع"); err != nil {
+		t.Fatal(err)
+	}
+	ar := i18n.WithContext(ctx, tr, tr.Match("ar"))
+	if got := settings.L10nServerAddr.T(ar); got != "عنوان الاستماع" {
+		t.Errorf("translated settings label: %q", got)
+	}
+	if got := settings.L10n("server.addr").T(i18n.WithContext(ctx, tr, tr.Match("en"))); got != "Listen address" {
+		t.Errorf("settings label by path, in English: %q", got)
 	}
 
 	err = s.Update(ctx, func(u *settings.Update) error {
