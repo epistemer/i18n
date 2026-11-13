@@ -130,7 +130,7 @@ and M6.2 on its frozen metafile format (driver M1.6) and its test helper
 roadmap item M11.1, and
 M6.4 on its `v0.1.0`.
 
-- [ ] **M6.1** The `labels` generator: the metafile and the template, placed
+- [x] **M6.1** The `labels` generator: the metafile and the template, placed
   where the driver's discovery spike says, with tests in a nested module (as
   ADR 0002 does for cfgx) so the core never requires the driver.
   *Done when:* rendering the labels of cfgx's zp example gives the same
@@ -138,7 +138,7 @@ M6.4 on its `v0.1.0`.
   from cfgx at commit `5a1759c`), and golden tests cover two label files for
   one package, several packages, a label with neither `var` nor `path`, a
   package where no label has a path, and text that needs quoting.
-- [ ] **M6.2** The checks: one key has one text across the app; in a
+- [x] **M6.2** The checks: one key has one text across the app; in a
   package, no two labels share a `var` or a `path`.
   *Done when:* each check has a test whose message names the key or
   identifier and the producers involved.

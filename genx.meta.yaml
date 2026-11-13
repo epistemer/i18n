@@ -1,0 +1,46 @@
+# i18n's trivial generator for genx (github.com/epistemer/genx): it turns
+# every labels/v1 file in an app into zz_<package>_i18n.go, one per package.
+# ADR 0003 is the design; the labels module next to this file tests it.
+version: 1
+
+generators:
+  labels:
+    doc: i18n keys for every label, one zz_<package>_i18n.go per package
+    needs: [labels/v1]
+    units: |
+      def norm($p): {key, text, path: (.path // ""), var: (.var // ""), producer: $p};
+      def producers: map(.producer) | unique | join(", ");
+
+      .["labels/v1"] as $files
+
+      # One key has one text across the app.
+      | ([$files[] | .producer as $p | .labels[] | norm($p)]
+         | group_by(.key)
+         | map(select((map(.text) | unique | length) > 1)
+               | "\(.[0].key) (\(producers))")) as $clash
+      | if $clash != [] then error("labels: one key, two texts: " + ($clash | join("; "))) else . end
+
+      # One unit per package that has labels; its files' labels in path order.
+      | $files | group_by(.package.dir)[]
+      | (map(.package.name) | unique) as $names
+      | if ($names | length) > 1
+        then error("labels: package \(.[0].package.dir) is named \($names | join(" and ")) (\(producers))")
+        else . end
+      | {package: .[0].package, labels: [.[] | .producer as $p | .labels[] | norm($p)]}
+      | select(.labels != [])
+
+      # In a package, a var or a path names one label.
+      | ([.labels[] | select(.var != "")] | group_by(.var)
+         | map(select(length > 1) | "var \(.[0].var) (\(producers))")) as $vars
+      | ([.labels[] | select(.path != "")] | group_by(.path)
+         | map(select(length > 1) | "path \(.[0].path) (\(producers))")) as $paths
+      | if ($vars + $paths) != []
+        then error("labels: declared twice in package \(.package.dir): " + ($vars + $paths | join("; ")))
+        else . end
+
+      | {package,
+         vars:   [.labels[] | select(.var != "")],
+         hidden: [.labels[] | select(.var == "" and .path == "")],
+         paths:  [.labels[] | select(.path != "")]}
+    out: '"\(.package.dir)/zz_\(.package.name)_i18n.go"'
+    template: labels.go.tmpl

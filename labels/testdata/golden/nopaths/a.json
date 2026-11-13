@@ -1,0 +1,2 @@
+{"domain": "labels/v1", "producer": "models", "package": {"name": "models", "dir": "models"},
+ "labels": [{"key": "enum.role.admin", "text": "admin", "var": "L10nRoleAdmin"}, {"key": "enum.role.guest", "text": "guest", "var": "L10nRoleGuest"}]}

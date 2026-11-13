@@ -1,0 +1,2 @@
+{"domain": "labels/v1", "producer": "enums", "package": {"name": "config", "dir": "internal/settings"},
+ "labels": [{"key": "enum.x", "text": "x"}]}

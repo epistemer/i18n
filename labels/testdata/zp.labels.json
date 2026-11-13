@@ -1,0 +1,368 @@
+{
+  "domain": "labels/v1",
+  "labels": [
+    {
+      "key": "settings.log",
+      "text": "Logging",
+      "path": "log",
+      "var": "L10nLog"
+    },
+    {
+      "key": "settings.log.level",
+      "text": "Minimum log level",
+      "path": "log.level",
+      "var": "L10nLogLevel"
+    },
+    {
+      "key": "settings.log.level.debug",
+      "text": "debug",
+      "path": "log.level.debug"
+    },
+    {
+      "key": "settings.log.level.info",
+      "text": "info",
+      "path": "log.level.info"
+    },
+    {
+      "key": "settings.log.level.warn",
+      "text": "warn",
+      "path": "log.level.warn"
+    },
+    {
+      "key": "settings.log.level.error",
+      "text": "error",
+      "path": "log.level.error"
+    },
+    {
+      "key": "settings.log.format",
+      "text": "Output format",
+      "path": "log.format",
+      "var": "L10nLogFormat"
+    },
+    {
+      "key": "settings.log.format.text",
+      "text": "text",
+      "path": "log.format.text"
+    },
+    {
+      "key": "settings.log.format.json",
+      "text": "json",
+      "path": "log.format.json"
+    },
+    {
+      "key": "settings.log.color",
+      "text": "Force colored output even without a TTY",
+      "path": "log.color",
+      "var": "L10nLogColor"
+    },
+    {
+      "key": "settings.database",
+      "text": "Database connection",
+      "path": "database",
+      "var": "L10nDB"
+    },
+    {
+      "key": "settings.database.host",
+      "text": "Database server host",
+      "path": "database.host",
+      "var": "L10nDBHost"
+    },
+    {
+      "key": "settings.database.port",
+      "text": "Database server port",
+      "path": "database.port",
+      "var": "L10nDBPort"
+    },
+    {
+      "key": "settings.database.name",
+      "text": "Database name",
+      "path": "database.name",
+      "var": "L10nDBName"
+    },
+    {
+      "key": "settings.database.user",
+      "text": "Database user",
+      "path": "database.user",
+      "var": "L10nDBUser"
+    },
+    {
+      "key": "settings.database.password",
+      "text": "Database password",
+      "path": "database.password",
+      "var": "L10nDBPassword"
+    },
+    {
+      "key": "settings.database.sslmode",
+      "text": "SSL mode",
+      "path": "database.sslmode",
+      "var": "L10nDBSslmode"
+    },
+    {
+      "key": "settings.database.sslmode.disable",
+      "text": "disable",
+      "path": "database.sslmode.disable"
+    },
+    {
+      "key": "settings.database.sslmode.require",
+      "text": "require",
+      "path": "database.sslmode.require"
+    },
+    {
+      "key": "settings.database.sslmode.verify-full",
+      "text": "verify-full",
+      "path": "database.sslmode.verify-full"
+    },
+    {
+      "key": "settings.smtp",
+      "text": "Outgoing mail",
+      "path": "smtp",
+      "var": "L10nSMTP"
+    },
+    {
+      "key": "settings.smtp.host",
+      "text": "SMTP server host",
+      "path": "smtp.host",
+      "var": "L10nSMTPHost"
+    },
+    {
+      "key": "settings.smtp.port",
+      "text": "SMTP server port",
+      "path": "smtp.port",
+      "var": "L10nSMTPPort"
+    },
+    {
+      "key": "settings.smtp.user",
+      "text": "SMTP user",
+      "path": "smtp.user",
+      "var": "L10nSMTPUser"
+    },
+    {
+      "key": "settings.smtp.password",
+      "text": "SMTP password",
+      "path": "smtp.password",
+      "var": "L10nSMTPPassword"
+    },
+    {
+      "key": "settings.smtp.auth",
+      "text": "SMTP auth mechanism",
+      "path": "smtp.auth",
+      "var": "L10nSMTPAuth"
+    },
+    {
+      "key": "settings.smtp.auth.PLAIN",
+      "text": "PLAIN",
+      "path": "smtp.auth.PLAIN"
+    },
+    {
+      "key": "settings.smtp.auth.LOGIN",
+      "text": "LOGIN",
+      "path": "smtp.auth.LOGIN"
+    },
+    {
+      "key": "settings.smtp.auth.CRAM-MD5",
+      "text": "CRAM-MD5",
+      "path": "smtp.auth.CRAM-MD5"
+    },
+    {
+      "key": "settings.smtp.tls",
+      "text": "Use implicit TLS",
+      "path": "smtp.tls",
+      "var": "L10nSMTPTLS"
+    },
+    {
+      "key": "settings.auth",
+      "text": "Authentication",
+      "path": "auth",
+      "var": "L10nAuth"
+    },
+    {
+      "key": "settings.auth.emailfrom",
+      "text": "Sender address for auth emails",
+      "path": "auth.emailfrom",
+      "var": "L10nAuthEmailFrom"
+    },
+    {
+      "key": "settings.auth.otp.ttl",
+      "text": "OTP validity",
+      "path": "auth.otp.ttl",
+      "var": "L10nAuthOTPTTL"
+    },
+    {
+      "key": "settings.auth.otp.length",
+      "text": "OTP length",
+      "path": "auth.otp.length",
+      "var": "L10nAuthOTPLength"
+    },
+    {
+      "key": "settings.auth.session.ttl",
+      "text": "Session lifetime",
+      "path": "auth.session.ttl",
+      "var": "L10nAuthSessionTTL"
+    },
+    {
+      "key": "settings.auth.jwt.private",
+      "text": "JWT private key (PEM)",
+      "path": "auth.jwt.private",
+      "var": "L10nAuthJWTPrivate"
+    },
+    {
+      "key": "settings.auth.jwt.public",
+      "text": "JWT public key (PEM)",
+      "path": "auth.jwt.public",
+      "var": "L10nAuthJWTPublic"
+    },
+    {
+      "key": "settings.auth.token",
+      "text": "Static API token",
+      "path": "auth.token",
+      "var": "L10nAuthToken"
+    },
+    {
+      "key": "settings.auth.keys",
+      "text": "CSV file of API keys",
+      "path": "auth.keys",
+      "var": "L10nAuthKeys"
+    },
+    {
+      "key": "settings.auth.mfa",
+      "text": "Require multi-factor authentication",
+      "path": "auth.mfa",
+      "var": "L10nAuthMFA"
+    },
+    {
+      "key": "settings.server",
+      "text": "HTTP server",
+      "path": "server",
+      "var": "L10nServer"
+    },
+    {
+      "key": "settings.server.host",
+      "text": "Listen address",
+      "path": "server.host",
+      "var": "L10nServerHost"
+    },
+    {
+      "key": "settings.server.port",
+      "text": "Listen port",
+      "path": "server.port",
+      "var": "L10nServerPort"
+    },
+    {
+      "key": "settings.server.tls.enabled",
+      "text": "Serve HTTPS",
+      "path": "server.tls.enabled",
+      "var": "L10nServerTLSEnabled"
+    },
+    {
+      "key": "settings.server.tls.cert",
+      "text": "TLS certificate",
+      "path": "server.tls.cert",
+      "var": "L10nServerTLSCert"
+    },
+    {
+      "key": "settings.server.tls.key",
+      "text": "TLS private key",
+      "path": "server.tls.key",
+      "var": "L10nServerTLSKey"
+    },
+    {
+      "key": "settings.server.timeout.read",
+      "text": "Read timeout",
+      "path": "server.timeout.read",
+      "var": "L10nServerTimeoutRead"
+    },
+    {
+      "key": "settings.server.timeout.write",
+      "text": "Write timeout",
+      "path": "server.timeout.write",
+      "var": "L10nServerTimeoutWrite"
+    },
+    {
+      "key": "settings.server.max_header",
+      "text": "Maximum request header size",
+      "path": "server.max_header",
+      "var": "L10nServerMaxHeader"
+    },
+    {
+      "key": "settings.server.rate.limit",
+      "text": "Requests per second per IP",
+      "path": "server.rate.limit",
+      "var": "L10nServerRateLimit"
+    },
+    {
+      "key": "settings.server.rate.burst",
+      "text": "Burst capacity per IP",
+      "path": "server.rate.burst",
+      "var": "L10nServerRateBurst"
+    },
+    {
+      "key": "settings.scheduler",
+      "text": "Task scheduler",
+      "path": "scheduler",
+      "var": "L10nScheduler"
+    },
+    {
+      "key": "settings.scheduler.location",
+      "text": "Scheduler timezone",
+      "path": "scheduler.location",
+      "var": "L10nSchedulerLocation"
+    },
+    {
+      "key": "settings.scheduler.execmode",
+      "text": "Task execution mode",
+      "path": "scheduler.execmode",
+      "var": "L10nSchedulerExecmode"
+    },
+    {
+      "key": "settings.scheduler.execmode.sequential",
+      "text": "sequential",
+      "path": "scheduler.execmode.sequential"
+    },
+    {
+      "key": "settings.scheduler.execmode.parallel",
+      "text": "parallel",
+      "path": "scheduler.execmode.parallel"
+    },
+    {
+      "key": "settings.scheduler.workers",
+      "text": "Concurrent workers",
+      "path": "scheduler.workers",
+      "var": "L10nSchedulerWorkers"
+    },
+    {
+      "key": "settings.scheduler.retry",
+      "text": "Retry policy",
+      "path": "scheduler.retry",
+      "var": "L10nSchedulerRetry"
+    },
+    {
+      "key": "settings.scheduler.retry.max",
+      "text": "Maximum retries",
+      "path": "scheduler.retry.max",
+      "var": "L10nSchedulerRetryMax"
+    },
+    {
+      "key": "settings.scheduler.retry.delay",
+      "text": "Delay between retries",
+      "path": "scheduler.retry.delay",
+      "var": "L10nSchedulerRetryDelay"
+    },
+    {
+      "key": "settings.storage",
+      "text": "Local storage",
+      "path": "storage",
+      "var": "L10nStorage"
+    },
+    {
+      "key": "settings.storage.bolt",
+      "text": "Bolt database file; also holds runtime settings",
+      "path": "storage.bolt",
+      "var": "L10nStorageBolt"
+    }
+  ],
+  "package": {
+    "dir": "internal/settings",
+    "name": "settings"
+  },
+  "producer": "cfgx"
+}

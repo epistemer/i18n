@@ -1,0 +1,10 @@
+// Code generated from labels by github.com/epistemer/i18n. DO NOT EDIT.
+
+package routes
+
+import "github.com/epistemer/i18n"
+
+var (
+	L10nHome = i18n.Key("route.home", "Home")
+	_        = i18n.Key("route.orders.index", "Orders")
+)
