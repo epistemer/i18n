@@ -14,7 +14,7 @@ tool (
 
 require (
 	github.com/epistemer/cfgx v0.1.1-0.20261113065940-060e3f5d970b
-	github.com/epistemer/genx v0.1.0-rc.3
+	github.com/epistemer/genx v0.1.0
 	github.com/epistemer/i18n v0.0.0-00010101000000-000000000000
 	github.com/epistemer/i18n/i18nschema v0.0.0-00010101000000-000000000000
 	github.com/spf13/cobra v1.10.2

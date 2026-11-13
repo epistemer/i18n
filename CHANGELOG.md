@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.2.0 (2026-11-13)
+
+- **The `labels` generator** ([ADR 0003](docs/adr/0003-labels-generator.md),
+  interface §3.4): a trivial generator for
+  [genx](https://github.com/epistemer/genx) v0.1.0, shipped as data
+  (`genx.meta.yaml` and `labels.go.tmpl`) in the core package's directory.
+  Switched on in an app's `genx.yaml` (`github.com/epistemer/i18n:
+  [labels]` under `use`), it turns every `labels/v1` file into
+  `zz_<package>_i18n.go`: a variable per label that names one, and
+  `L10n(path)` over the labels that have a path.
+- It refuses one key with two texts across the app, a `var` or `path`
+  declared twice in a package, and one directory with two package names,
+  naming the producers involved.
+- No new exported API, and no new dependency of the core: the generator's
+  tests live in a nested module, `labels`, which requires genx.
+- `examples/basic` generates its settings and their labels through genx, with
+  cfgx's `App.Labels()`.
+
 ## v0.1.0 (2026-11-12)
 
 The first release, built against the interface locked on 2026-11-12

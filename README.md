@@ -154,6 +154,31 @@ tr := i18n.New(s.Store().DB(), English, s) // s is the command's *settings.Serve
 
 [examples/basic](examples/basic) is a complete app with an end-to-end test.
 
+## Generated labels
+
+Code generators don't write `i18n.Key` calls. They write their labels as
+data, `labels/v1` files, and i18n's `labels` generator turns them into keys.
+[genx](https://github.com/epistemer/genx) runs both; switch the generator on
+in the app's `genx.yaml`:
+
+```yaml
+use:
+  - github.com/epistemer/i18n: [labels]
+```
+
+For cfgx's settings, add `.Labels()` to the schema's `App` and name cfgx as
+a producer: genx's README has the steps. Each package with labels gets
+`zz_<package>_i18n.go`, which declares the variable each label names (cfgx
+names them after its getters) and `L10n(path)` to find one by name:
+
+```go
+settings.L10nServerAddr.T(ctx) // "Listen address", or its translation
+```
+
+The generator stops the run when one key has two texts in the app, or a
+package declares a name twice, and names the producers involved. Interface
+§3.4 has the details.
+
 ## Testing
 
 `i18ntest.New(t, source)` (import `github.com/epistemer/i18n/i18ntest`)
