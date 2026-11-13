@@ -4,6 +4,31 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
+## 2026-11-13: M6.1–M6.3, the labels generator through genx
+
+- **Landed:**
+  - **M6.1, M6.2** ([PR #8](https://github.com/epistemer/i18n/pull/8)):
+    `genx.meta.yaml` and `labels.go.tmpl` in the root package directory,
+    where genx ADR 0003 puts generators so `go mod vendor` keeps them. The
+    query refuses one key with two texts, a var or path twice in a package,
+    and one directory with two package names, naming the producers. Tests
+    live in the nested module `labels/` (genx's `genxtest.Render`), so the
+    core never requires genx. The labels of cfgx's zp example render to the
+    same 117 lines of declarations as the file `App.I18n()` wrote.
+  - **M6.3** ([PR #9](https://github.com/epistemer/i18n/pull/9)):
+    `examples/basic` generates through genx: cfgx's `App.Labels()` writes
+    the labels, this generator writes the Go. Its test fails on a stale
+    labels file, and the e2e test translates a settings label.
+- **Reviewed:** Gemini 3.8 Flash (High), about 228k tokens; 2 of 6
+  findings taken, the rest already handled by genx or by ADR 0003's own
+  template.
+- **Found:** genx passed `go generate`'s `GOPACKAGE` to cfgx, which then
+  wrote `zz_main.go`; fixed in genx `v0.1.0-rc.3`.
+- **Decided for you:** the nested test module is called `labels`.
+- **Next:** M6.4 (interface §2 and §11, README, CHANGELOG, `v0.2.0`) once
+  genx tags `v0.1.0`.
+- **Waiting on you:** nothing.
+
 ## 2026-11-13: the labels generator (ADR 0003); design only
 
 - **Landed:** design records, no code:
