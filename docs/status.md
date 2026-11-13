@@ -9,7 +9,8 @@ taken for you, what's next, and what's waiting on you. The terms are in
 - **Landed:** design records, no code:
   [ADR 0003](adr/0003-labels-generator.md), the amendment in interface §13
   with notes in §2 and §11, roadmap milestone M6 under a new v0.2.0, and a
-  line in implementation §1. They are in PR_LINK, which is open and not
+  line in implementation §1. They are in
+  [PR #7](https://github.com/epistemer/i18n/pull/7), which is open and not
   merged: a change of scope is yours to approve.
 - **Asked by you:** a second, critical look at the generation pipeline you
   proposed for neozp (generators publish metadata, other packages ship
