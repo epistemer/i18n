@@ -36,10 +36,9 @@ taken for you, what's next, and what's waiting on you. The terms are in
   can't reach agy, so Gemini hasn't seen the ADR. The PR is the place for
   that review.
 - **Next:** nothing in i18n until the driver freezes its metafile format
-  (driver M1.6, in the roadmap parked in cfgx's `docs/neozp/`); then M6.1.
+  (genx roadmap M1.6); then M6.1.
 - **Waiting on you:**
   - the PR;
-  - a name and a repository for the driver (working name `genx`);
   - earlier: deleting the merged branches.
 
 ## 2026-11-12: a skill for using i18n

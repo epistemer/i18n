@@ -26,7 +26,7 @@ the rule costs:
 - Nothing sees every key before the app starts. A key declared with two
   different texts is caught by `Load`, at startup (interface §3.1, §9).
 
-**[neozp ADR 0001](https://github.com/epistemer/cfgx/blob/main/docs/neozp/0001-generation-pipeline.md)**
+**[neozp ADR 0001](https://github.com/epistemer/genx/blob/main/docs/adr/0001-generation-pipeline.md)**
 (2026-11-13) replaces the rule for the whole framework. In short:
 
 - A generator publishes data files in named, versioned shapes, called
@@ -35,14 +35,12 @@ the rule costs:
   declaration of which domains it reads, queries over them, and templates. It
   contains no code.
 - A *driver* runs generators in order, checks for stale output and removes
-  leftovers. Its working name is `genx`.
+  leftovers: [genx](https://github.com/epistemer/genx).
 - Labels are the first shared domain, `labels/v1`. Every producer writes it,
   and i18n reads only that.
 
-That record and the
-[driver's roadmap](https://github.com/epistemer/cfgx/blob/main/docs/neozp/genx-roadmap.md)
-are parked in cfgx's repository, under `docs/neozp/`, until the driver has
-one. Where this ADR repeats part of the record, the record is the reference.
+That record and the [driver's roadmap](https://github.com/epistemer/genx/blob/main/docs/roadmap.md) live in genx's repository.
+Where this ADR repeats part of the record, the record is the reference.
 [cfgx ADR 0008](https://github.com/epistemer/cfgx/blob/main/docs/adr/0008-labels-as-data.md)
 is the first producer's side.
 
