@@ -4,6 +4,26 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
+## 2026-11-13: M6.4, v0.2.0
+
+- **Landed:**
+  - **M6.4** ([PR #10](https://github.com/epistemer/i18n/pull/10)):
+    - Interface §2 says where the generator lives.
+    - The new §3.4 describes what it writes and what it refuses.
+    - §11 keeps only reading an app's schema out of scope.
+    - The README has a "Generated labels" section, and the CHANGELOG
+      covers v0.2.0.
+    - `labels/` and `examples/basic` require genx `v0.1.0`.
+  - **`v0.2.0`** is tagged. The done-when holds: in a fresh app that
+    requires only i18n, `go get github.com/epistemer/i18n@v0.2.0` worked
+    through the module proxy, and genx `v0.1.0` found the generator, wrote
+    `zz_ui_i18n.go`, and `genx check` passed.
+- **Decided for you:** nothing new.
+- **Next:** the roadmap's "Later" items, as neozp needs them. The models
+  package on sqlc, genx's next item, will be the generator's second
+  producer.
+- **Waiting on you:** nothing.
+
 ## 2026-11-13: M6.1–M6.3, the labels generator through genx
 
 - **Landed:**
