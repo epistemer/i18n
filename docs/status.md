@@ -4,6 +4,43 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
+## 2026-11-13: the labels generator (ADR 0003); design only
+
+- **Landed:** design records, no code:
+  [ADR 0003](adr/0003-labels-generator.md), the amendment in interface §13
+  with notes in §2 and §11, roadmap milestone M6 under a new v0.2.0, and a
+  line in implementation §1. They are in
+  [PR #7](https://github.com/epistemer/i18n/pull/7), which is open and not
+  merged: a change of scope is yours to approve.
+- **Asked by you:** a second, critical look at the generation pipeline you
+  proposed for neozp (generators publish metadata, other packages ship
+  declarative generators over it, a driver runs them), and then the records
+  for it here and in cfgx.
+- **Decided by you:** the direction. It replaces the rule in interface §2
+  that each generator writes its own `i18n.Key` calls, which cfgx's
+  `App.I18n()` followed.
+- **Decided for you, overturnable:**
+  - i18n ships one generator, `labels`, as a metafile and a template. No Go
+    package, no command, no new dependency.
+  - It writes `zz_<package>_i18n.go` with the same names cfgx's `App.I18n()`
+    wrote, so moving over changes only comments.
+  - It checks what no single producer can see: one key with two texts
+    across the app, and a variable or a path declared twice in a package.
+  - `labels/v1` belongs to the driver's documents, not to i18n.
+  - `meta` bytes for labels wait for the routes generator.
+- **Checked:** a prototype (one jq query, one Go template; both are in the
+  ADR) rendered the 62 labels of cfgx's zp example with the same 117 lines of
+  declarations as cfgx's file. It also merged two files for one package and
+  stopped on both checks.
+- **Not reviewed yet:** this session ran in Claude's cloud workspace, which
+  can't reach agy, so Gemini hasn't seen the ADR. The PR is the place for
+  that review.
+- **Next:** nothing in i18n until the driver freezes its metafile format
+  (genx roadmap M1.6); then M6.1.
+- **Waiting on you:**
+  - the PR;
+  - earlier: deleting the merged branches.
+
 ## 2026-11-12: a skill for using i18n
 
 - **Landed:** a global Claude Code skill, `~/.claude/skills/i18n/`, like

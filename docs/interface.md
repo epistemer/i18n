@@ -64,6 +64,12 @@ The core depends on bbolt and protobuf only. Code generators that read an
 app's schema (tables, enums, routes) belong to the packages that own models and
 routes. They emit `i18n.Key` calls like any hand-written code.
 
+> **Changing ([ADR 0003](adr/0003-labels-generator.md)).** Those packages will
+> write their labels as data, in `labels/v1` files, and i18n will ship one
+> generator, `labels`, that turns the files into `i18n.Key` declarations. It
+> ships as a metafile and a template, with no Go package and no new
+> dependency. This section stands as written until roadmap M6.4 rewrites it.
+
 ---
 
 ## 3. Declaring keys
@@ -495,7 +501,9 @@ Both use the process's registry, so a component test sees the app's real keys.
   ([roadmap](roadmap.md)).
 - Reading zp's existing store layout. Moving zp's data is a one-off migration
   for the app, written against the layout in implementation.md.
-- Generators for keys derived from an app's schema.
+- Generators for keys derived from an app's schema. (Changing with
+  [ADR 0003](adr/0003-labels-generator.md): reading a schema stays out of
+  scope, but i18n will ship the `labels` generator that writes the keys.)
 
 ---
 
@@ -515,6 +523,7 @@ Both use the process's registry, so a component test sees the app's real keys.
 |------|--------|
 | 2026-11-12 | From [review 0001](reviews/0001-gemini-design-review.md): base-language step in §5.1; overrides that no longer fit are skipped, and fit allows indexed omission (§5.2, §8.2, §9); empty text stays empty; canonical locale codes (§6.1); `Match` (§6.2); `Cookie` and `ClearCookie` (§7); D1 names the catalog; single-transaction `Search`; failure behavior of `T`; `Dynamic` keys must be registered. Made in place, before the lock |
 | 2026-11-12 | Locked by epistemer, with D1's override-only store and the proposed answers to §12 |
+| 2026-11-13 | **The `labels` generator** ([ADR 0003](adr/0003-labels-generator.md)). i18n ships one generator, as data: a metafile and a template that the neozp generation driver runs. It reads every `labels/v1` file in the app and writes `zz_<package>_i18n.go` per package: a variable for each label that names one, and `L10n(path)` over the labels that have a path. It fails when one key has two texts in the app, or when a package declares a variable or a path twice. No new exported Go API and no new dependency (§2, §11). Direction chosen by epistemer: one generation pipeline over shared metadata, in place of each generator writing `i18n.Key` calls from its own template. What the file holds and what's checked decided by Claude; overturnable. **Takes effect with roadmap M6**; until then §2 and §11 stand as written |
 
 ---
 
