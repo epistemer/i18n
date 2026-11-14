@@ -4,7 +4,7 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
-## 2026-11-14: label arguments, v0.3.0 (amendment awaiting approval)
+## 2026-11-14: label arguments, v0.3.0
 
 - **Asked for by** the errors package (its interface §9): a label passed as
   an argument to `T` should show in the request's locale, not as a struct
@@ -26,9 +26,10 @@ taken for you, what's next, and what's waiting on you. The terms are in
   of quota. It caught that formatting still ran inside the transaction.
 - **Decided for you:** `Ter` wins over `error`, `Stringer` and `Formatter`;
   a nil pointer or `Tfunc` label renders as `<nil>`.
-- **Waiting on you:** approving the §5.2 amendment. It changes behaviour an
-  app can see, so per ownership.md it's yours. Once approved: merge, tag
-  `v0.3.0`.
+- **Decided by you:** the §5.2 amendment, approved on 2026-11-14.
+- **Released:** [PR #11](https://github.com/epistemer/i18n/pull/11) merged,
+  `v0.3.0` tagged.
+- **Waiting on you:** nothing.
 
 ## 2026-11-13: M6.4, v0.2.0
 
