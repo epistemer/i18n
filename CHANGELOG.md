@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.3.0 (2026-11-14)
+
+- **Label arguments** (interface §5.2, amendment of 2026-11-14): an argument
+  to `T` that implements `Ter` is rendered with the same context before the
+  text is formatted. `L10nHello.T(ctx, L10nServer)` now shows the label in
+  the request's locale (the code's text without a translator) instead of a
+  struct dump. Errors that implement `Ter`, such as
+  [errors](https://github.com/epistemer/errors) values, show their message
+  for people.
+- Arguments render before `T` opens its read transaction, and the text is
+  formatted after it, so no argument's code (a label's `T`, a `String` or
+  `Error` method) runs inside it and can nest a bbolt transaction.
+- `Ter` wins over `error`, `fmt.Stringer` and `fmt.Formatter`; a nil pointer
+  or `Tfunc` label renders as `<nil>`. The fit rules are unchanged: use `%s`
+  or `%v` for a label argument.
+- No new exported API.
+
 ## v0.2.0 (2026-11-13)
 
 - **The `labels` generator** ([ADR 0003](docs/adr/0003-labels-generator.md),

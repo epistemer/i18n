@@ -4,6 +4,32 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
+## 2026-11-14: label arguments, v0.3.0 (amendment awaiting approval)
+
+- **Asked for by** the errors package (its interface §9): a label passed as
+  an argument to `T` should show in the request's locale, not as a struct
+  dump.
+- **Landed on branch `ter-args`:** `resolveCtx` renders every `Ter` argument
+  with the same context before `T` opens its read transaction, and formats
+  the text after it, so no argument's code runs inside a bbolt transaction.
+  Interface §5.2 gains the rule and §13 records it; implementation §4,
+  README, CHANGELOG (v0.3.0) and the skill are updated. No new exported API.
+- **Tests:** a label argument in the locale and, without a translator, in
+  the code's text; nested labels in the locale; mixed arguments with the
+  caller's slice untouched; `Ter` beats `error`; nil labels;
+  `TestArgs_OutsideTransaction` (a `Ter` and a `Stringer` that force bbolt
+  to remap), each shown to fail when its rendering is moved inside the
+  `View`; `TestArgs_Stress` with concurrent `Set`s and `Reset`s, 10 minutes
+  clean under `-race` (`I18N_STRESS=10m`). The fit tests are unchanged.
+- **Reviewed:** [review 0009](reviews/0009-gemini-label-args-review.md),
+  Gemini 4 Hydrogen (High), about 70k tokens, since every Argon tier was out
+  of quota. It caught that formatting still ran inside the transaction.
+- **Decided for you:** `Ter` wins over `error`, `Stringer` and `Formatter`;
+  a nil pointer or `Tfunc` label renders as `<nil>`.
+- **Waiting on you:** approving the §5.2 amendment. It changes behaviour an
+  app can see, so per ownership.md it's yours. Once approved: merge, tag
+  `v0.3.0`.
+
 ## 2026-11-13: M6.4, v0.2.0
 
 - **Landed:**
