@@ -28,7 +28,8 @@ taken for you, what's next, and what's waiting on you. The terms are in
   a nil pointer or `Tfunc` label renders as `<nil>`.
 - **Decided by you:** the §5.2 amendment, approved on 2026-11-14.
 - **Released:** [PR #11](https://github.com/epistemer/i18n/pull/11) merged,
-  `v0.3.0` tagged.
+  `v0.3.0` tagged. Through proxy.golang.org, an empty module that requires
+  only `v0.3.0` prints `Hello Server` for `hello.T(ctx, server)`.
 - **Waiting on you:** nothing.
 
 ## 2026-11-13: M6.4, v0.2.0
