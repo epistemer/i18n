@@ -119,7 +119,10 @@ For a key in a locale, `T` shows the first of:
 5. for a key looked up by name (`i18n.T(ctx, "some.key")`) that no release
    ever registered, the name itself.
 
-Text is formatted with `fmt` only when arguments are passed. There's no
+Text is formatted with `fmt` only when arguments are passed. An argument
+that is itself a label (any `Ter`) is rendered in the same locale first, so
+`L10nHello.T(ctx, L10nServer)` translates both; use `%s` or `%v` for it.
+There's no
 plural support yet, so prefer texts whose grammar doesn't depend on a count.
 
 ## Editing

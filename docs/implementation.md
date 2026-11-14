@@ -126,9 +126,16 @@ var reg struct {
 
 ```go
 // resolveTx reads within tx, so T (in a View) and Reset (in its Update) share it.
-func (t *Translator) resolveTx(tx *bbolt.Tx, l Locale, name string, e *entry, args []any) string
+// It returns the text unformatted; resolveCtx formats it after the View.
+func (t *Translator) resolveTx(tx *bbolt.Tx, code, name string, e *entry, withArgs bool) (text string, formattable bool)
 ```
 
+0. Render every argument that implements `Ter` with `ctx` (`renderArgs`, on a
+   copy of `args`; no copy when none does). This happens in `resolveCtx`,
+   before the `db.View`: a label argument is itself a `T` call with its own
+   read transaction, and bbolt can deadlock on a read transaction nested in
+   another in one goroutine when a writer waits between them (it waits for
+   the outer one, the inner one waits for it, on a remap).
 1. Get the translator and locale from `ctx`. With no translator, use the code's
    text (`e.text`, `reg.m[name]`, or `name` itself) and go to step 4.
 2. If `e` is nil, look `name` up in `reg.m`. If it's still nil, read
@@ -139,9 +146,12 @@ func (t *Translator) resolveTx(tx *bbolt.Tx, l Locale, name string, e *entry, ar
    source, in that order, skipping duplicates and buckets that don't exist.
    The first hit wins, unless `args` were passed and the override doesn't fit
    the signature. With no hit, use the code's text.
-4. If `args` were passed and the text isn't empty, `fmt.Sprintf(text, args...)`.
+4. If `args` were passed and the text isn't empty, `fmt.Sprintf(text, args...)`,
+   except for a key's own name.
 
-`T` wraps steps 2–3 in one `db.View`. `Reset` calls `resolveTx` with its own
+`T` wraps steps 2–3 in one `db.View`, and steps 0 and 4 run outside it, so no
+code from an argument (a label's `T`, a `String` or `Error` method) runs
+inside the transaction. `Reset` calls `resolveTx` with its own
 write transaction after deleting, so it sees its own deletes: a separate `View`
 would read the last committed state.
 

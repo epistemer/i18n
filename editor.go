@@ -88,7 +88,7 @@ func (t *Translator) Reset(code, key string) (string, error) {
 			}
 		}
 		// The same transaction, so it sees its own delete.
-		shown = t.resolveTx(tx, canon, key, nil, nil)
+		shown, _ = t.resolveTx(tx, canon, key, nil, false)
 		return nil
 	})
 	return shown, err

@@ -12,7 +12,9 @@ type key struct {
 // K returns the key's name.
 func (k *key) K() string { return k.name }
 
-// T returns the key's text in the context's locale (interface §5.1).
+// T returns the key's text in the context's locale (interface §5.1),
+// formatted with args when there are any. An argument that implements Ter is
+// rendered in the same context first (§5.2).
 func (k *key) T(ctx context.Context, args ...any) string {
 	return resolveCtx(ctx, k.name, k.e, args)
 }

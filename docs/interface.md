@@ -322,6 +322,15 @@ text and logs the error, at most once a minute.
 - With no `args`, the text is returned as is. A `%` is just a character.
 - With `args`, the text goes through `fmt.Sprintf(text, args...)`. An empty
   text stays empty.
+- An argument that implements `Ter` is rendered with the same context before
+  the text is formatted, so `Hello.T(ctx, settings.L10nServer)` shows the
+  label in the request's locale. With no translator in the context, that's
+  the label's code text. The label renders with no arguments of its own.
+  Labels render before `T` reads the store and the text is formatted after,
+  so no code from an argument runs inside `T`'s read transaction. `Ter` wins
+  over `error`, `fmt.Stringer` and `fmt.Formatter`, and a nil pointer or
+  `Tfunc` renders as `<nil>`. The fit rules below don't change: the argument is a string by the
+  time the text is formatted, so the code's text uses `%s` or `%v` for it.
 - An override **fits** the code's text when every argument it uses has the
   same verb as in the code's text. When the code's text has verbs, a literal
   `%` is written `%%`. Explicit indexes (`%[2]s`) let a translation reorder
@@ -578,6 +587,7 @@ Both use the process's registry, so a component test sees the app's real keys.
 | 2026-11-12 | From [review 0001](reviews/0001-gemini-design-review.md): base-language step in §5.1; overrides that no longer fit are skipped, and fit allows indexed omission (§5.2, §8.2, §9); empty text stays empty; canonical locale codes (§6.1); `Match` (§6.2); `Cookie` and `ClearCookie` (§7); D1 names the catalog; single-transaction `Search`; failure behavior of `T`; `Dynamic` keys must be registered. Made in place, before the lock |
 | 2026-11-12 | Locked by epistemer, with D1's override-only store and the proposed answers to §12 |
 | 2026-11-13 | **The `labels` generator** ([ADR 0003](adr/0003-labels-generator.md)). i18n ships one generator, as data: a metafile and a template that the neozp generation driver runs. It reads every `labels/v1` file in the app and writes `zz_<package>_i18n.go` per package: a variable for each label that names one, and `L10n(path)` over the labels that have a path. It fails when one key has two texts in the app, or when a package declares a variable or a path twice. No new exported Go API and no new dependency (§2, §11). Direction chosen by epistemer: one generation pipeline over shared metadata, in place of each generator writing `i18n.Key` calls from its own template. What the file holds and what's checked decided by Claude; overturnable. In effect from v0.2.0 (§2, §3.4, §11) |
+| 2026-11-14 | **Label arguments** (§5.2). An argument that implements `Ter` is rendered with the same context before the text is formatted, so a label passed as an argument shows in the request's locale instead of a struct dump; with no translator, its code text. Arguments render before `T` opens its read transaction and the text is formatted after it, because a nested bbolt read transaction in one goroutine can deadlock behind a waiting writer. Fit rules unchanged. Asked for by the errors package (its interface §9), which doesn't depend on it. Proposed by Claude, approved by epistemer on 2026-11-14. In effect from v0.3.0 |
 
 ---
 
