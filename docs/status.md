@@ -19,7 +19,9 @@ taken for you, what's next, and what's waiting on you. The terms are in
 - **Tests:** `TestRegisteredPathIsUnique` looks up `i18n.store.v1.LocaleRecord`
   in the global registry and fails if its file is the bare `records.proto`
   or doesn't name i18n. It failed before the rename.
-- **Reviewed:** REVIEW_PLACEHOLDER
+- **Reviewed:** [review 0010](reviews/0010-gemini-proto-path-review.md),
+  Gemini 3.8 Flash (High) through the agy CLI (its MCP server didn't
+  connect), a few thousand tokens: no findings.
 - **Decided for you:** the `i18n_` prefix, matching auth's `auth_records.proto`.
 - **Released:** RELEASE_PLACEHOLDER
 - **Waiting on you:** nothing.
