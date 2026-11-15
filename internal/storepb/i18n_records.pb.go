@@ -6,7 +6,7 @@
 // versions:
 // 	protoc-gen-go v1.36.12
 // 	protoc        v3.21.12
-// source: records.proto
+// source: i18n_records.proto
 
 package storepb
 
@@ -37,7 +37,7 @@ type LocaleRecord struct {
 
 func (x *LocaleRecord) Reset() {
 	*x = LocaleRecord{}
-	mi := &file_records_proto_msgTypes[0]
+	mi := &file_i18n_records_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -49,7 +49,7 @@ func (x *LocaleRecord) String() string {
 func (*LocaleRecord) ProtoMessage() {}
 
 func (x *LocaleRecord) ProtoReflect() protoreflect.Message {
-	mi := &file_records_proto_msgTypes[0]
+	mi := &file_i18n_records_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -62,7 +62,7 @@ func (x *LocaleRecord) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LocaleRecord.ProtoReflect.Descriptor instead.
 func (*LocaleRecord) Descriptor() ([]byte, []int) {
-	return file_records_proto_rawDescGZIP(), []int{0}
+	return file_i18n_records_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *LocaleRecord) GetNativeName() string {
@@ -99,7 +99,7 @@ type CatalogEntry struct {
 
 func (x *CatalogEntry) Reset() {
 	*x = CatalogEntry{}
-	mi := &file_records_proto_msgTypes[1]
+	mi := &file_i18n_records_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -111,7 +111,7 @@ func (x *CatalogEntry) String() string {
 func (*CatalogEntry) ProtoMessage() {}
 
 func (x *CatalogEntry) ProtoReflect() protoreflect.Message {
-	mi := &file_records_proto_msgTypes[1]
+	mi := &file_i18n_records_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -124,7 +124,7 @@ func (x *CatalogEntry) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CatalogEntry.ProtoReflect.Descriptor instead.
 func (*CatalogEntry) Descriptor() ([]byte, []int) {
-	return file_records_proto_rawDescGZIP(), []int{1}
+	return file_i18n_records_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *CatalogEntry) GetText() string {
@@ -161,7 +161,7 @@ type Base struct {
 
 func (x *Base) Reset() {
 	*x = Base{}
-	mi := &file_records_proto_msgTypes[2]
+	mi := &file_i18n_records_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -173,7 +173,7 @@ func (x *Base) String() string {
 func (*Base) ProtoMessage() {}
 
 func (x *Base) ProtoReflect() protoreflect.Message {
-	mi := &file_records_proto_msgTypes[2]
+	mi := &file_i18n_records_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -186,7 +186,7 @@ func (x *Base) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Base.ProtoReflect.Descriptor instead.
 func (*Base) Descriptor() ([]byte, []int) {
-	return file_records_proto_rawDescGZIP(), []int{2}
+	return file_i18n_records_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *Base) GetText() string {
@@ -203,11 +203,11 @@ func (x *Base) GetSetUnix() int64 {
 	return 0
 }
 
-var File_records_proto protoreflect.FileDescriptor
+var File_i18n_records_proto protoreflect.FileDescriptor
 
-const file_records_proto_rawDesc = "" +
+const file_i18n_records_proto_rawDesc = "" +
 	"\n" +
-	"\rrecords.proto\x12\ri18n.store.v1\"^\n" +
+	"\x12i18n_records.proto\x12\ri18n.store.v1\"^\n" +
 	"\fLocaleRecord\x12\x1f\n" +
 	"\vnative_name\x18\x01 \x01(\tR\n" +
 	"nativeName\x12\x1b\n" +
@@ -222,24 +222,24 @@ const file_records_proto_rawDesc = "" +
 	"\bset_unix\x18\x02 \x01(\x03R\asetUnixB,Z*github.com/epistemer/i18n/internal/storepbb\x06proto3"
 
 var (
-	file_records_proto_rawDescOnce sync.Once
-	file_records_proto_rawDescData []byte
+	file_i18n_records_proto_rawDescOnce sync.Once
+	file_i18n_records_proto_rawDescData []byte
 )
 
-func file_records_proto_rawDescGZIP() []byte {
-	file_records_proto_rawDescOnce.Do(func() {
-		file_records_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_records_proto_rawDesc), len(file_records_proto_rawDesc)))
+func file_i18n_records_proto_rawDescGZIP() []byte {
+	file_i18n_records_proto_rawDescOnce.Do(func() {
+		file_i18n_records_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_i18n_records_proto_rawDesc), len(file_i18n_records_proto_rawDesc)))
 	})
-	return file_records_proto_rawDescData
+	return file_i18n_records_proto_rawDescData
 }
 
-var file_records_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
-var file_records_proto_goTypes = []any{
+var file_i18n_records_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_i18n_records_proto_goTypes = []any{
 	(*LocaleRecord)(nil), // 0: i18n.store.v1.LocaleRecord
 	(*CatalogEntry)(nil), // 1: i18n.store.v1.CatalogEntry
 	(*Base)(nil),         // 2: i18n.store.v1.Base
 }
-var file_records_proto_depIdxs = []int32{
+var file_i18n_records_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
 	0, // [0:0] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -247,26 +247,26 @@ var file_records_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_records_proto_init() }
-func file_records_proto_init() {
-	if File_records_proto != nil {
+func init() { file_i18n_records_proto_init() }
+func file_i18n_records_proto_init() {
+	if File_i18n_records_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_records_proto_rawDesc), len(file_records_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_i18n_records_proto_rawDesc), len(file_i18n_records_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   3,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
-		GoTypes:           file_records_proto_goTypes,
-		DependencyIndexes: file_records_proto_depIdxs,
-		MessageInfos:      file_records_proto_msgTypes,
+		GoTypes:           file_i18n_records_proto_goTypes,
+		DependencyIndexes: file_i18n_records_proto_depIdxs,
+		MessageInfos:      file_i18n_records_proto_msgTypes,
 	}.Build()
-	File_records_proto = out.File
-	file_records_proto_goTypes = nil
-	file_records_proto_depIdxs = nil
+	File_i18n_records_proto = out.File
+	file_i18n_records_proto_goTypes = nil
+	file_i18n_records_proto_depIdxs = nil
 }

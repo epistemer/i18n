@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.3.1 (2026-11-15)
+
+- The store's protobuf file is registered as `i18n_records.proto` instead of
+  `records.proto`, so a program that imports i18n and another library with
+  its own `records.proto` no longer panics at start ("proto: file
+  \"records.proto\" is already registered"). The proto package, the messages
+  and the stored bytes are unchanged; no API change.
+
 ## v0.3.0 (2026-11-14)
 
 - **Label arguments** (interface §5.2, amendment of 2026-11-14): an argument

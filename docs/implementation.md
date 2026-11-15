@@ -17,7 +17,7 @@ i18n/                    package i18n
   resolve.go             T's resolution order, context helpers (WithContext, Code, Codes, T)
   editor.go              Set, Reset, Search, Orphans, Prune, locale management
   http.go                Middleware, Cookie, SetCookie, ClearCookie
-  internal/storepb/      records.proto and its generated Go code
+  internal/storepb/      i18n_records.proto and its generated Go code
 i18nschema/              the cfgx schema fragment (its own module, ADR 0002)
 i18ntest/                New and Context for tests
 examples/basic/          a net/http app wired with cfgx, run by the e2e tests (its own module)
