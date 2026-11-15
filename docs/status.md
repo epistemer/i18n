@@ -4,6 +4,26 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
+## 2026-11-15: a unique protobuf file path, v0.3.1
+
+- **Asked for by** auth's M1.3: its tests panicked because auth and i18n both
+  registered a protobuf file named `records.proto`, and protobuf-go keeps one
+  registry of file paths per process. auth renamed its file; i18n shouldn't
+  rely on others avoiding the name.
+- **Landed on branch `v0.3.1-proto-path`:** `internal/storepb/records.proto`
+  is now `i18n_records.proto`, regenerated with protoc 3.21.12 and the pinned
+  protoc-gen-go v1.36.12. The `go:generate` directive names the new file; the
+  drift check is unchanged and passes locally. The proto package, messages
+  and wire format are unchanged, so existing bbolt files read as before.
+  ADR 0001 records the naming rule and the rename; implementation.md follows.
+- **Tests:** `TestRegisteredPathIsUnique` looks up `i18n.store.v1.LocaleRecord`
+  in the global registry and fails if its file is the bare `records.proto`
+  or doesn't name i18n. It failed before the rename.
+- **Reviewed:** REVIEW_PLACEHOLDER
+- **Decided for you:** the `i18n_` prefix, matching auth's `auth_records.proto`.
+- **Released:** RELEASE_PLACEHOLDER
+- **Waiting on you:** nothing.
+
 ## 2026-11-14: label arguments, v0.3.0
 
 - **Asked for by** the errors package (its interface §9): a label passed as

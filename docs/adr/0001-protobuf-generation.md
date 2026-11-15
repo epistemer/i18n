@@ -9,7 +9,7 @@
 ## Context
 
 The store's records are protobuf messages (interface D4, implementation §2.2).
-Their Go code is generated from `internal/storepb/records.proto`. Users of the
+Their Go code is generated from `internal/storepb/i18n_records.proto`. Users of the
 library must never need `protoc`, and CI must catch generated code that has
 drifted from the `.proto` file.
 
@@ -23,7 +23,12 @@ drifted from the `.proto` file.
   `internal/storepb/generate.go` runs `protoc` through `sh -c`, with
   `go tool -n protoc-gen-go` as the plugin. Generation needs a POSIX shell,
   but only maintainers and the Linux CI job generate.
-- **Committed output:** `records.pb.go` is committed.
+- **Committed output:** `i18n_records.pb.go` is committed.
+- **File name:** the `.proto` file's name starts with `i18n_`. protobuf-go
+  registers every file by its path in one registry per process and panics at
+  start when two packages register the same path, so a generic name such as
+  `records.proto` breaks any program that also imports another library's
+  file of that name. `internal/storepb/path_test.go` keeps it unique.
 - **Drift check:** on Linux, CI installs `protoc` from Ubuntu's packages
   (3.21.x on `ubuntu-latest`, 24.04), regenerates, and runs `git diff
   --exit-code` with `-I '^//[[:space:]]+protoc[[:space:]]'`. That ignores only
@@ -47,6 +52,14 @@ drifted from the `.proto` file.
 ## Consequences
 
 - A maintainer needs `protoc` 3.21.x and a POSIX shell to change
-  `records.proto`. Nobody else does.
+  `i18n_records.proto`. Nobody else does.
 - Upgrading `google.golang.org/protobuf` also upgrades the generator, so the
   drift check catches a regeneration that wasn't committed.
+
+## Update, 2026-11-15 (v0.3.1)
+
+The file was `records.proto` until v0.3.1. A program that imported i18n and
+another library with its own `records.proto` panicked at start ("proto: file
+\"records.proto\" is already registered"). It was renamed to
+`i18n_records.proto`; the proto package, the messages and the bytes stored in
+bbolt are unchanged, since the wire format doesn't carry the file's path.
