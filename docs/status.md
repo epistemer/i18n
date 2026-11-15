@@ -10,7 +10,7 @@ taken for you, what's next, and what's waiting on you. The terms are in
   registered a protobuf file named `records.proto`, and protobuf-go keeps one
   registry of file paths per process. auth renamed its file; i18n shouldn't
   rely on others avoiding the name.
-- **Landed on branch `v0.3.1-proto-path`:** `internal/storepb/records.proto`
+- **Landed** ([PR #12](https://github.com/epistemer/i18n/pull/12)): `internal/storepb/records.proto`
   is now `i18n_records.proto`, regenerated with protoc 3.21.12 and the pinned
   protoc-gen-go v1.36.12. The `go:generate` directive names the new file; the
   drift check is unchanged and passes locally. The proto package, messages
@@ -23,8 +23,10 @@ taken for you, what's next, and what's waiting on you. The terms are in
   Gemini 3.8 Flash (High) through the agy CLI (its MCP server didn't
   connect), a few thousand tokens: no findings.
 - **Decided for you:** the `i18n_` prefix, matching auth's `auth_records.proto`.
-- **Released:** [PR #12](https://github.com/epistemer/i18n/pull/12); `v0.3.1`
-  is tagged on `main` after it merges on green.
+- **Released:** [PR #12](https://github.com/epistemer/i18n/pull/12) merged
+  on green (12 of 12 checks), `v0.3.1` tagged. Through proxy.golang.org, a
+  module that requires only `v0.3.1` registers its own `records.proto`
+  beside i18n's `i18n_records.proto` without a collision.
 - **Waiting on you:** nothing.
 
 ## 2026-11-14: label arguments, v0.3.0
