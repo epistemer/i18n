@@ -20,7 +20,7 @@
 | D8 | Context | The translator and the locale ride in the `context.Context`. With no translator in it, you get the code's text |
 | D9 | HTTP | A `net/http` middleware in the core package. No web framework dependency |
 | D10 | Logging | `log/slog`, replaceable with `WithLogger`. Apps that use logrus bridge it |
-| D11 | Errors | The `Translator`'s errors are public, found structurally: each implements `TKer` and `Kind() string`, so the errors package shows them to people without i18n importing it (§8.5; amendment I1, proposed 2026-11-24) |
+| D11 | Errors | The `Translator`'s errors are public, found structurally: each implements `TKer` and `Kind() string`, so the errors package shows them to people without i18n importing it (§8.5; amendment I1, locked 2026-11-24) |
 | D12 | Module path | `github.com/epistemer/i18n`, package `i18n` |
 | D13 | License | MIT, like cfgx |
 
@@ -520,8 +520,6 @@ func (t *Translator) Prune() (removed []string, err error) // deletes orphans an
 
 ### 8.5 Errors people see
 
-> **Proposed (amendment I1, 2026-11-24), not locked.** Waiting on epistemer.
-
 ```go
 // Unchanged: the same variables, values and Error() texts. Compare with errors.Is.
 var (
@@ -569,7 +567,7 @@ errors.
   declaring the same key with the same kind agrees with it.
 - The texts follow errors' D14: lowercase, no final period. They're
   permanent keys: renaming one orphans its translations.
-- With errors before its amendment E1 (`Kind() string`), these errors show
+- With errors before v0.2.0, its amendment E1 (`Kind() string`), these errors show
   their text but `KindOf` gives `Internal`.
 
 ---
@@ -642,7 +640,7 @@ Both use the process's registry, so a component test sees the app's real keys.
 | 2026-11-12 | Locked by epistemer, with D1's override-only store and the proposed answers to §12 |
 | 2026-11-13 | **The `labels` generator** ([ADR 0003](adr/0003-labels-generator.md)). i18n ships one generator, as data: a metafile and a template that the neozp generation driver runs. It reads every `labels/v1` file in the app and writes `zz_<package>_i18n.go` per package: a variable for each label that names one, and `L10n(path)` over the labels that have a path. It fails when one key has two texts in the app, or when a package declares a variable or a path twice. No new exported Go API and no new dependency (§2, §11). Direction chosen by epistemer: one generation pipeline over shared metadata, in place of each generator writing `i18n.Key` calls from its own template. What the file holds and what's checked decided by Claude; overturnable. In effect from v0.2.0 (§2, §3.4, §11) |
 | 2026-11-14 | **Label arguments** (§5.2). An argument that implements `Ter` is rendered with the same context before the text is formatted, so a label passed as an argument shows in the request's locale instead of a struct dump; with no translator, its code text. Arguments render before `T` opens its read transaction and the text is formatted after it, because a nested bbolt read transaction in one goroutine can deadlock behind a waiting writer. Fit rules unchanged. Asked for by the errors package (its interface §9), which doesn't depend on it. Proposed by Claude, approved by epistemer on 2026-11-14. In effect from v0.3.0 |
-| 2026-11-24 | **Public errors** (§8.5, D11), *proposed, waiting on epistemer's lock*. Confab's finding F29: `/admin/translations/xx` answered 500 "something went wrong", and a translation that dropped a `%d` was refused without saying why. Every error the `Translator` returns implements `TKer` and `Kind() string`, with a key under `errors.i18n.`, a detail argument and a kind; the variables, `errors.Is` and `Error()` are unchanged. The kind needs errors' amendment E1 (`KindOf` reads `Kind() string`), because i18n can't import errors. Direction by epistemer ("I1 yes, structurally", 2026-11-24); the details proposed by Claude |
+| 2026-11-24 | **Public errors** (§8.5, D11). Confab's finding F29: `/admin/translations/xx` answered 500 "something went wrong", and a translation that dropped a `%d` was refused without saying why. Every error the `Translator` returns implements `TKer` and `Kind() string`, with a key under `errors.i18n.`, a detail argument and a kind; the variables, `errors.Is` and `Error()` are unchanged. The kind needs errors' amendment E1 (`KindOf` reads `Kind() string`), because i18n can't import errors. Direction by epistemer ("I1 yes, structurally", 2026-11-24); the details proposed by Claude and locked by epistemer as drafted on 2026-11-24 (all six errors, a detail argument each, the §8.5 table), relayed through the Confab session. In effect from v0.4.0 |
 
 ---
 
