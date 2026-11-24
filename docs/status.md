@@ -4,6 +4,42 @@ Newest first. Every working session adds an entry: what landed, the decisions
 taken for you, what's next, and what's waiting on you. The terms are in
 [ownership.md](ownership.md).
 
+## 2026-11-24: public errors, amendment I1 (v0.4.0)
+
+- **Asked for by** Confab's finding F29. `/admin/translations/xx` answered
+  500 "something went wrong", and a translation that dropped a `%d` was
+  refused without saying why. i18n can't import errors, which imports i18n.
+- **Decided by you:** the direction ("I1 yes, structurally"), then the draft
+  locked as written on 2026-11-24, all four questions on their defaults
+  (relayed through the Confab session). All six errors are public, each
+  message carries its detail, keys are `errors.i18n.<name>` with the §8.5
+  table's texts and kinds, and errors gets amendment E1 (`KindOf` reads
+  `Kind() string`). D11 changes from "out of scope" to this.
+- **Landed:** every error the `Translator` returns is an unexported
+  `pubError`. It implements `TKer` and `Kind() string`, `Unwrap` returns the
+  variable, and `Error()` is unchanged byte for byte. Six keys are
+  registered by i18n with errors' meta. `formatVerbs` lists the code text's
+  verbs for `ErrFormat`. Gemini 4 Hydrogen (High) wrote it from a brief
+  (about 223k tokens), because Argon is cooling down until about
+  2026-11-28. Claude reviewed it.
+- **Reviewed:** Gemini 4 Hydrogen (High), about 173k tokens, with errors'
+  E1, in a scratch folder holding the diffs and spec excerpts. No critical
+  or major findings, and four minor ones:
+  - `Load`'s invalid-source error stays a public error itself, as the spec
+    says. Claude had reverted it to a plain `fmt.Errorf` wrap, and restored
+    it.
+  - A code text `fmt` can't parse (`%d of %*`) left `ErrFormat`'s argument
+    empty, so it now falls back to the code text. Recorded as a
+    clarification in §8.5 and §13.
+  - Each kind is now written once.
+  - The suggested tests were added where they test something new.
+  An end-to-end check against errors' branch gave 404 "there's no locale
+  with the code xx", 400 naming `%d`, and 409.
+- **Decided for you:** that fallback. Also, the T argument of
+  `Cookie("DE")` is the canonical `de`, while `Error()` keeps `"DE"` as
+  before.
+- **Waiting on you:** nothing.
+
 ## 2026-11-15: a unique protobuf file path, v0.3.1
 
 - **Asked for by** auth's M1.3: its tests panicked because auth and i18n both

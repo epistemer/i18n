@@ -1,6 +1,6 @@
 # Changelog
 
-## v0.4.0 (unreleased)
+## v0.4.0 (2026-11-24)
 
 - **Public errors** (interface §8.5, D11, amendment I1): every error the
   `Translator` returns that wraps one of the six sentinel variables
