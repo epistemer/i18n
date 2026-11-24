@@ -38,6 +38,11 @@ taken for you, what's next, and what's waiting on you. The terms are in
 - **Decided for you:** that fallback. Also, the T argument of
   `Cookie("DE")` is the canonical `de`, while `Error()` keeps `"DE"` as
   before.
+- **Released:** [PR #13](https://github.com/epistemer/i18n/pull/13) merged
+  on green (12 of 12 checks), and `v0.4.0` tagged, with errors `v0.2.0`
+  ([epistemer/errors#4](https://github.com/epistemer/errors/pull/4)). A
+  module that requires only the two tags, through proxy.golang.org, gets
+  404 "there's no locale with the code xx" from `errors.T` and `KindOf`.
 - **Waiting on you:** nothing.
 
 ## 2026-11-15: a unique protobuf file path, v0.3.1

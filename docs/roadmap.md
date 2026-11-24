@@ -202,7 +202,10 @@ M6.4 on its `v0.1.0`.
 
 ### Errors
 
-- **Why:** this waits on the errors redesign. In zp, `errors.T` needs an exact
+**Done in v0.4.0** (interface §8.5, amendment I1): the `Translator`'s errors
+are public, and github.com/epistemer/errors shows them with their kinds.
+
+- **Why:** this waited on the errors redesign. In zp, `errors.T` needs an exact
   `err.Error()` match, so a wrapped error shows "unknown error occurred". The
   API also returns the English `err.Error()` whatever language the client asks
   for.
