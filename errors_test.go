@@ -200,16 +200,13 @@ func TestPublicErrors_CallSites(t *testing.T) {
 	}
 	t.Cleanup(func() { db.Close() })
 	loadErr := i18n.New(db, i18n.Locale{Code: "e n"}, nil).Load()
-	if !errors.Is(loadErr, i18n.ErrInvalidCode) {
+	if !errors.Is(loadErr, i18n.ErrInvalidCode) || errors.Unwrap(loadErr) != i18n.ErrInvalidCode {
 		t.Fatalf("Load invalid source: %v", loadErr)
 	}
 	if loadErr.Error() != `source locale: i18n: invalid locale code: "e n"` {
 		t.Errorf("Load.Error() = %q", loadErr.Error())
 	}
-	// Load adds context with fmt.Errorf; the public error stays in the tree,
-	// where github.com/epistemer/errors finds it.
-	var pub publicError
-	if !errors.As(loadErr, &pub) || pub.Kind() != "invalid" || pub.T(ctx) != `"e n" isn't a valid locale code` {
+	if pub, ok := loadErr.(publicError); !ok || pub.Kind() != "invalid" || pub.T(ctx) != `"e n" isn't a valid locale code` {
 		t.Errorf("Load public error = %#v", loadErr)
 	}
 }
