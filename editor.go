@@ -22,17 +22,17 @@ func (t *Translator) Set(code, key, text string) error {
 	}
 	e := t.reg.m[key]
 	if e == nil {
-		return fmt.Errorf("%w: %q", ErrUnknownKey, key)
+		return unknownKeyError(key)
 	}
 	if !fitsText(e.sig, text) {
-		return fmt.Errorf("%w: %q for key %q, whose code text is %q", ErrFormat, text, key, e.text)
+		return formatError(text, key, e.text)
 	}
 	return t.db.Update(func(tx *bolt.Tx) error {
 		top := t.top(tx)
 		n := t.names(canon)
 		texts := sub(top, n.text)
 		if texts == nil {
-			return fmt.Errorf("%w: %q", ErrUnknownLocale, canon)
+			return unknownLocaleError(canon)
 		}
 		bases, err := top.CreateBucketIfNotExists(n.base)
 		if err != nil {
@@ -77,7 +77,7 @@ func (t *Translator) Reset(code, key string) (string, error) {
 		n := t.names(canon)
 		texts := sub(top, n.text)
 		if texts == nil {
-			return fmt.Errorf("%w: %q", ErrUnknownLocale, canon)
+			return unknownLocaleError(canon)
 		}
 		if err := texts.Delete([]byte(key)); err != nil {
 			return err
@@ -128,7 +128,7 @@ func (t *Translator) Search(code string, q Query) ([]Entry, error) {
 	err = t.db.View(func(tx *bolt.Tx) error {
 		top := t.top(tx)
 		if _, ok := t.localeTx(tx, canon); !ok {
-			return fmt.Errorf("%w: %q", ErrUnknownLocale, canon)
+			return unknownLocaleError(canon)
 		}
 		catalog := sub(top, bktCatalog)
 		if catalog == nil {

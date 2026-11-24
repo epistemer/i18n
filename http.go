@@ -1,7 +1,6 @@
 package i18n
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -103,7 +102,7 @@ func (t *Translator) acceptTx(tx *bolt.Tx, header string) (Locale, bool) {
 func (t *Translator) Cookie(code string) (*http.Cookie, error) {
 	l, ok := t.Locale(code)
 	if !ok {
-		return nil, fmt.Errorf("%w: %q", ErrUnknownLocale, code)
+		return nil, unknownLocaleError(code)
 	}
 	return &http.Cookie{
 		Name:     t.cookie,

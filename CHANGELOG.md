@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.4.0 (unreleased)
+
+- **Public errors** (interface §8.5, D11, amendment I1): every error the
+  `Translator` returns that wraps one of the six sentinel variables
+  (`ErrInvalidCode`, `ErrUnknownLocale`, `ErrLocaleExists`,
+  `ErrSourceLocale`, `ErrUnknownKey`, `ErrFormat`) now implements `TKer` and
+  `Kind() string`, so `github.com/epistemer/errors` can display them to people
+  and classify their kind without `i18n` importing `errors`.
+- `i18n` registers the six `errors.i18n.*` keys with their default texts and
+  `{"kind":"...","args":["string"]}` meta, so deployments can edit them like
+  any key. `ErrFormat` lists the distinct format directives of the key's code
+  text in order of first appearance.
+- The sentinel variables, `errors.Is`, `errors.Unwrap`, and all `Error()`
+  strings are unchanged; the bare variables do not implement `Ter`.
+- No new exported API.
+
 ## v0.3.1 (2026-11-15)
 
 - The store's protobuf file is registered as `i18n_records.proto` instead of

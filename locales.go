@@ -3,7 +3,6 @@ package i18n
 import (
 	"context"
 	"errors"
-	"fmt"
 	"sort"
 
 	bolt "go.etcd.io/bbolt"
@@ -77,7 +76,7 @@ func (t *Translator) CreateLocale(l Locale) error {
 			return err
 		}
 		if sub(top, t.names(canon).text) != nil {
-			return fmt.Errorf("%w: %q", ErrLocaleExists, canon)
+			return localeExistsError(canon)
 		}
 		return t.putLocale(top, l)
 	})
@@ -94,7 +93,7 @@ func (t *Translator) UpdateLocale(l Locale) error {
 	return t.db.Update(func(tx *bolt.Tx) error {
 		top := t.top(tx)
 		if sub(top, t.names(canon).text) == nil {
-			return fmt.Errorf("%w: %q", ErrUnknownLocale, canon)
+			return unknownLocaleError(canon)
 		}
 		return t.putLocale(top, l)
 	})
@@ -109,16 +108,16 @@ func (t *Translator) DeleteLocale(code string) error {
 		return err
 	}
 	if canon == t.source.Code {
-		return fmt.Errorf("%w: %q", ErrSourceLocale, canon)
+		return sourceLocaleError(canon)
 	}
 	return t.db.Update(func(tx *bolt.Tx) error {
 		top := t.top(tx)
 		if top == nil {
-			return fmt.Errorf("%w: %q", ErrUnknownLocale, canon)
+			return unknownLocaleError(canon)
 		}
 		n := t.names(canon)
 		if top.Bucket(n.text) == nil {
-			return fmt.Errorf("%w: %q", ErrUnknownLocale, canon)
+			return unknownLocaleError(canon)
 		}
 		if locales := sub(top, bktLocales); locales != nil {
 			if err := locales.Delete([]byte(canon)); err != nil {

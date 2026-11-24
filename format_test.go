@@ -85,6 +85,36 @@ func TestParseSignature(t *testing.T) {
 	}
 }
 
+func TestFormatVerbs(t *testing.T) {
+	tests := []struct {
+		format string
+		want   string
+	}{
+		{"", ""},
+		{"plain", ""},
+		{"%%", ""},
+		{"%d items", "%d"},
+		{"%d%% off", "%d"},
+		{"%d and %d", "%d"},
+		{"%d and %04d", "%d %04d"},
+		{"%5.2f", "%5.2f"},
+		{"%-08.3f", "%-08.3f"},
+		{"%[2]d %[1]s", "%[2]d %[1]s"},
+		{"%[1]d (0x%[1]x) %[1]d", "%[1]d %[1]x"},
+		{"%*.*f", "%*.*f"},
+		{"%[3]*.[2]*[1]f", "%[3]*.[2]*[1]f"},
+		{"100%", ""},
+		{"%[x]d", ""},
+		{"%d 100%", "%d"},
+		{"%ä", "%ä"},
+	}
+	for _, tt := range tests {
+		if got := formatVerbs(tt.format); got != tt.want {
+			t.Errorf("formatVerbs(%q) = %q, want %q", tt.format, got, tt.want)
+		}
+	}
+}
+
 func TestFormat(t *testing.T) {
 	if got := format("50% off", nil); got != "50% off" {
 		t.Errorf("no args: got %q", got)
