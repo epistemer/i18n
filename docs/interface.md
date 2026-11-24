@@ -558,9 +558,9 @@ errors.
   returned bare shows errors' `Unknown`. i18n never returns one bare.
 - `ErrFormat`'s argument lists the verbs of the code's text, each once, in
   the order they first appear, separated by spaces and written as in the
-  code's text: `%d`, or `%[2]d %[1]s`. The code's text always has a verb
-  when `Set` refuses an override, because any text fits one without verbs
-  (§5.2).
+  code's text: `%d`, or `%[2]d %[1]s`. A code text that `fmt` can't parse,
+  such as `%d of %*`, can refuse overrides with no complete verb to list;
+  the argument is then the code's text itself.
 - The keys are registered by i18n itself, so every app's catalog lists them
   and its people can edit them like any key. Their meta is errors' (its
   §5.9): `{"kind":"not_found","args":["string"]}`, so an `errors.Key1`
@@ -640,7 +640,7 @@ Both use the process's registry, so a component test sees the app's real keys.
 | 2026-11-12 | Locked by epistemer, with D1's override-only store and the proposed answers to §12 |
 | 2026-11-13 | **The `labels` generator** ([ADR 0003](adr/0003-labels-generator.md)). i18n ships one generator, as data: a metafile and a template that the neozp generation driver runs. It reads every `labels/v1` file in the app and writes `zz_<package>_i18n.go` per package: a variable for each label that names one, and `L10n(path)` over the labels that have a path. It fails when one key has two texts in the app, or when a package declares a variable or a path twice. No new exported Go API and no new dependency (§2, §11). Direction chosen by epistemer: one generation pipeline over shared metadata, in place of each generator writing `i18n.Key` calls from its own template. What the file holds and what's checked decided by Claude; overturnable. In effect from v0.2.0 (§2, §3.4, §11) |
 | 2026-11-14 | **Label arguments** (§5.2). An argument that implements `Ter` is rendered with the same context before the text is formatted, so a label passed as an argument shows in the request's locale instead of a struct dump; with no translator, its code text. Arguments render before `T` opens its read transaction and the text is formatted after it, because a nested bbolt read transaction in one goroutine can deadlock behind a waiting writer. Fit rules unchanged. Asked for by the errors package (its interface §9), which doesn't depend on it. Proposed by Claude, approved by epistemer on 2026-11-14. In effect from v0.3.0 |
-| 2026-11-24 | **Public errors** (§8.5, D11). Confab's finding F29: `/admin/translations/xx` answered 500 "something went wrong", and a translation that dropped a `%d` was refused without saying why. Every error the `Translator` returns implements `TKer` and `Kind() string`, with a key under `errors.i18n.`, a detail argument and a kind; the variables, `errors.Is` and `Error()` are unchanged. The kind needs errors' amendment E1 (`KindOf` reads `Kind() string`), because i18n can't import errors. Direction by epistemer ("I1 yes, structurally", 2026-11-24); the details proposed by Claude and locked by epistemer as drafted on 2026-11-24 (all six errors, a detail argument each, the §8.5 table), relayed through the Confab session. In effect from v0.4.0 |
+| 2026-11-24 | **Public errors** (§8.5, D11). Confab's finding F29: `/admin/translations/xx` answered 500 "something went wrong", and a translation that dropped a `%d` was refused without saying why. Every error the `Translator` returns implements `TKer` and `Kind() string`, with a key under `errors.i18n.`, a detail argument and a kind; the variables, `errors.Is` and `Error()` are unchanged. The kind needs errors' amendment E1 (`KindOf` reads `Kind() string`), because i18n can't import errors. Direction by epistemer ("I1 yes, structurally", 2026-11-24); the details proposed by Claude and locked by epistemer as drafted on 2026-11-24 (all six errors, a detail argument each, the §8.5 table), relayed through the Confab session. Clarified by Claude from the pre-merge review: `ErrFormat`'s argument falls back to the code's text when that text can't be parsed. In effect from v0.4.0 |
 
 ---
 

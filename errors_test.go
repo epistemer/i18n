@@ -14,6 +14,7 @@ import (
 var (
 	errTestItems     = i18n.Key("errtest.items", "%d items")
 	errTestReordered = i18n.Key("errtest.reordered", "%[2]d %[1]s and %[2]d")
+	errTestBroken    = i18n.Key("errtest.broken", "%d of %*")
 )
 
 type publicError interface {
@@ -286,5 +287,20 @@ func TestPublicErrors_CatalogMeta(t *testing.T) {
 		if string(e.Meta) != w.meta {
 			t.Errorf("%s meta = %s, want %s", e.Key, e.Meta, w.meta)
 		}
+	}
+}
+
+// A code text fmt can't parse refuses overrides that formatVerbs finds no
+// verb for; the message then shows the code text instead of nothing.
+func TestPublicErrors_FormatBrokenCodeText(t *testing.T) {
+	tr := openTestTranslator(t)
+	must(tr.CreateLocale(i18n.Locale{Code: "ar"}))
+	ctx := i18n.WithContext(context.Background(), tr, tr.Source())
+	err := tr.Set("ar", errTestBroken.K(), "x")
+	if !errors.Is(err, i18n.ErrFormat) {
+		t.Skipf("Set accepted the override (%v); nothing to check", err)
+	}
+	if got := err.(i18n.Ter).T(ctx); strings.HasSuffix(got, ": ") {
+		t.Errorf("ErrFormat.T for a broken code text = %q, ends with no verbs", got)
 	}
 }
