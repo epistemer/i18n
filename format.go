@@ -2,6 +2,8 @@ package i18n
 
 import (
 	"fmt"
+	"slices"
+	"strings"
 	"unicode/utf8"
 )
 
@@ -28,7 +30,20 @@ func (s *signature) use(arg int, verb rune) {
 
 // parseSignature parses format as fmt.Sprintf would, without arguments.
 func parseSignature(format string) signature {
+	sig, _ := parseFormat(format, false)
+	return sig
+}
+
+// formatVerbs returns the distinct format directives of format, each spelled
+// as written, in order of first appearance and joined by a single space.
+func formatVerbs(format string) string {
+	_, verbs := parseFormat(format, true)
+	return strings.Join(verbs, " ")
+}
+
+func parseFormat(format string, collectVerbs bool) (signature, []string) {
 	var sig signature
+	var verbs []string
 	argNum := 0
 	end := len(format)
 	for i := 0; i < end; {
@@ -36,6 +51,7 @@ func parseSignature(format string) signature {
 			i++
 			continue
 		}
+		pct := i
 		i++
 		if i >= end {
 			sig.broken = true // %!(NOVERB)
@@ -104,9 +120,14 @@ func parseSignature(format string) signature {
 		default:
 			sig.use(argNum, verb)
 			argNum++
+			if collectVerbs {
+				if d := format[pct:i]; !slices.Contains(verbs, d) {
+					verbs = append(verbs, d)
+				}
+			}
 		}
 	}
-	return sig
+	return sig, verbs
 }
 
 // argIndex reads an optional "[n]" at format[i:], as fmt's argNumber does.

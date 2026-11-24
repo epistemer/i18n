@@ -20,7 +20,7 @@
 | D8 | Context | The translator and the locale ride in the `context.Context`. With no translator in it, you get the code's text |
 | D9 | HTTP | A `net/http` middleware in the core package. No web framework dependency |
 | D10 | Logging | `log/slog`, replaceable with `WithLogger`. Apps that use logrus bridge it |
-| D11 | Errors | Out of scope until the errors redesign ([roadmap](roadmap.md#errors)) |
+| D11 | Errors | The `Translator`'s errors are public, found structurally: each implements `TKer` and `Kind() string`, so the errors package shows them to people without i18n importing it (§8.5; amendment I1, locked 2026-11-24) |
 | D12 | Module path | `github.com/epistemer/i18n`, package `i18n` |
 | D13 | License | MIT, like cfgx |
 
@@ -518,6 +518,58 @@ func (t *Translator) Prune() (removed []string, err error) // deletes orphans an
 `Orphans` is the preview: `Prune` deletes exactly what it lists, unless a
 `Load` ran in between.
 
+### 8.5 Errors people see
+
+```go
+// Unchanged: the same variables, values and Error() texts. Compare with errors.Is.
+var (
+	ErrInvalidCode   = errors.New("i18n: invalid locale code")
+	ErrUnknownLocale = errors.New("i18n: unknown locale")
+	ErrLocaleExists  = errors.New("i18n: locale already exists")
+	ErrSourceLocale  = errors.New("i18n: the source locale can't be deleted")
+	ErrUnknownKey    = errors.New("i18n: unknown key")
+	ErrFormat        = errors.New("i18n: text doesn't fit the code's format verbs")
+)
+```
+
+Every error the `Translator` returns that wraps one of these is **public**:
+besides `error` and `Unwrap() error` (the variable), it implements `TKer`
+and `Kind() string`. So `github.com/epistemer/errors` shows it to people
+(`errors.T`, `Public`, `All`) with a kind (`KindOf`), and i18n doesn't import
+errors.
+
+| Variable | Key | Code text | Argument | Kind |
+|---|---|---|---|---|
+| `ErrInvalidCode` | `errors.i18n.invalid_code` | `"%s" isn't a valid locale code` | the code as given | `invalid` |
+| `ErrUnknownLocale` | `errors.i18n.unknown_locale` | `there's no locale with the code %s` | the code, canonical when valid | `not_found` |
+| `ErrLocaleExists` | `errors.i18n.locale_exists` | `the locale %s already exists` | the canonical code | `conflict` |
+| `ErrSourceLocale` | `errors.i18n.source_locale` | `%s is the source locale, so it can't be deleted` | the canonical code | `conflict` |
+| `ErrUnknownKey` | `errors.i18n.unknown_key` | `there's no text with the key %s` | the key | `not_found` |
+| `ErrFormat` | `errors.i18n.format` | `the translation's placeholders must match the original's: %s` | the code text's verbs | `invalid` |
+
+- The returned error is an unexported value, like an errors occurrence. Its
+  `Error()` is today's text (`i18n: unknown locale: "xx"`), so logs don't
+  change. `T(ctx)` renders its key with its argument in ctx's locale and
+  ignores the `args` it's called with; `K()` is the key; `Kind()` is the
+  kind's name as errors' `Kind.String()` spells it.
+- `errors.Is(err, ErrUnknownLocale)` holds as before. `errors.Unwrap(err)`
+  returns the variable, as `fmt.Errorf("%w: …")` did.
+- The variables themselves aren't public, as errors' `Def1` isn't: one
+  returned bare shows errors' `Unknown`. i18n never returns one bare.
+- `ErrFormat`'s argument lists the verbs of the code's text, each once, in
+  the order they first appear, separated by spaces and written as in the
+  code's text: `%d`, or `%[2]d %[1]s`. A code text that `fmt` can't parse,
+  such as `%d of %*`, can refuse overrides with no complete verb to list;
+  the argument is then the code's text itself.
+- The keys are registered by i18n itself, so every app's catalog lists them
+  and its people can edit them like any key. Their meta is errors' (its
+  §5.9): `{"kind":"not_found","args":["string"]}`, so an `errors.Key1`
+  declaring the same key with the same kind agrees with it.
+- The texts follow errors' D14: lowercase, no final period. They're
+  permanent keys: renaming one orphans its translations.
+- With errors before v0.2.0, its amendment E1 (`Kind() string`), these errors show
+  their text but `KindOf` gives `Internal`.
+
 ---
 
 ## 9. Startup sync
@@ -588,6 +640,7 @@ Both use the process's registry, so a component test sees the app's real keys.
 | 2026-11-12 | Locked by epistemer, with D1's override-only store and the proposed answers to §12 |
 | 2026-11-13 | **The `labels` generator** ([ADR 0003](adr/0003-labels-generator.md)). i18n ships one generator, as data: a metafile and a template that the neozp generation driver runs. It reads every `labels/v1` file in the app and writes `zz_<package>_i18n.go` per package: a variable for each label that names one, and `L10n(path)` over the labels that have a path. It fails when one key has two texts in the app, or when a package declares a variable or a path twice. No new exported Go API and no new dependency (§2, §11). Direction chosen by epistemer: one generation pipeline over shared metadata, in place of each generator writing `i18n.Key` calls from its own template. What the file holds and what's checked decided by Claude; overturnable. In effect from v0.2.0 (§2, §3.4, §11) |
 | 2026-11-14 | **Label arguments** (§5.2). An argument that implements `Ter` is rendered with the same context before the text is formatted, so a label passed as an argument shows in the request's locale instead of a struct dump; with no translator, its code text. Arguments render before `T` opens its read transaction and the text is formatted after it, because a nested bbolt read transaction in one goroutine can deadlock behind a waiting writer. Fit rules unchanged. Asked for by the errors package (its interface §9), which doesn't depend on it. Proposed by Claude, approved by epistemer on 2026-11-14. In effect from v0.3.0 |
+| 2026-11-24 | **Public errors** (§8.5, D11). Confab's finding F29: `/admin/translations/xx` answered 500 "something went wrong", and a translation that dropped a `%d` was refused without saying why. Every error the `Translator` returns implements `TKer` and `Kind() string`, with a key under `errors.i18n.`, a detail argument and a kind; the variables, `errors.Is` and `Error()` are unchanged. The kind needs errors' amendment E1 (`KindOf` reads `Kind() string`), because i18n can't import errors. Direction by epistemer ("I1 yes, structurally", 2026-11-24); the details proposed by Claude and locked by epistemer as drafted on 2026-11-24 (all six errors, a detail argument each, the §8.5 table), relayed through the Confab session. Clarified by Claude from the pre-merge review: `ErrFormat`'s argument falls back to the code's text when that text can't be parsed. In effect from v0.4.0 |
 
 ---
 

@@ -1,7 +1,6 @@
 package i18n
 
 import (
-	"fmt"
 	"math"
 	"sort"
 	"strconv"
@@ -24,23 +23,23 @@ type Locale struct {
 }
 
 // canonical validates code as BCP 47 syntax and returns it in canonical case.
-// Errors wrap ErrInvalidCode (use fmt.Errorf("%w: %q", ErrInvalidCode, code)).
+// Errors wrap ErrInvalidCode.
 func canonical(code string) (string, error) {
 	if code == "" {
-		return "", fmt.Errorf("%w: %q", ErrInvalidCode, code)
+		return "", invalidCodeError(code)
 	}
 
 	for i := 0; i < len(code); i++ {
 		b := code[i]
 		if !isLetter(b) && !isDigit(b) && b != '-' {
-			return "", fmt.Errorf("%w: %q", ErrInvalidCode, code)
+			return "", invalidCodeError(code)
 		}
 	}
 
 	subtags := strings.Split(code, "-")
 	for _, sub := range subtags {
 		if sub == "" {
-			return "", fmt.Errorf("%w: %q", ErrInvalidCode, code)
+			return "", invalidCodeError(code)
 		}
 	}
 
@@ -48,20 +47,20 @@ func canonical(code string) (string, error) {
 	first := subtags[0]
 	if len(first) == 1 {
 		if first[0] != 'x' && first[0] != 'X' {
-			return "", fmt.Errorf("%w: %q", ErrInvalidCode, code)
+			return "", invalidCodeError(code)
 		}
 	} else if len(first) >= 2 && len(first) <= 8 {
 		if !isAllLetters(first) {
-			return "", fmt.Errorf("%w: %q", ErrInvalidCode, code)
+			return "", invalidCodeError(code)
 		}
 	} else {
-		return "", fmt.Errorf("%w: %q", ErrInvalidCode, code)
+		return "", invalidCodeError(code)
 	}
 
 	// Subsequent subtags: 1-8 letters or digits.
 	for _, sub := range subtags[1:] {
 		if len(sub) < 1 || len(sub) > 8 {
-			return "", fmt.Errorf("%w: %q", ErrInvalidCode, code)
+			return "", invalidCodeError(code)
 		}
 	}
 
@@ -73,13 +72,13 @@ func canonical(code string) (string, error) {
 			continue
 		}
 		if i == len(subtags)-1 {
-			return "", fmt.Errorf("%w: %q", ErrInvalidCode, code)
+			return "", invalidCodeError(code)
 		}
 		if sub == "x" || sub == "X" {
 			break
 		}
 		if len(subtags[i+1]) == 1 {
-			return "", fmt.Errorf("%w: %q", ErrInvalidCode, code)
+			return "", invalidCodeError(code)
 		}
 	}
 

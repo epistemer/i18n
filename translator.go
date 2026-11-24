@@ -82,7 +82,9 @@ func New(db *bolt.DB, source Locale, cfg Config, opts ...Option) *Translator {
 		bucket: []byte(o.bucket), cookie: o.cookie, reg: o.reg, now: o.now,
 	}
 	if code, err := canonical(source.Code); err != nil {
-		t.sourceErr = fmt.Errorf("source locale: %w", err)
+		pe := invalidCodeError(source.Code)
+		pe.msg = "source locale: " + pe.msg
+		t.sourceErr = pe
 	} else {
 		t.source.Code = code
 	}

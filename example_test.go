@@ -69,9 +69,16 @@ func ExampleTranslator_Set() {
 
 	err := tr.Set("en", "example.hello", "Hello, %d!")
 	fmt.Println(errors.Is(err, i18n.ErrFormat))
+	if pub, ok := err.(interface {
+		i18n.TKer
+		Kind() string
+	}); ok {
+		fmt.Println(pub.Kind(), pub.T(ctx))
+	}
 	// Output:
 	// Welcome to Acme
 	// true
+	// invalid the translation's placeholders must match the original's: %s
 }
 
 // Reset removes an edit and returns the text that shows instead.
